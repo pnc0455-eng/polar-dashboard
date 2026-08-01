@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Polar Follow — Verify</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--accent:#0c76ff;--roblox:#e8272c;--discord:#5865f2}
+  html,body{height:100%}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#06060f;color:#e7e9f0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;overflow:hidden;position:relative}
+
+  /* Animated aurora background */
+  .aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .aurora span{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;animation:drift 18s ease-in-out infinite}
+  .aurora span:nth-child(1){width:520px;height:520px;background:radial-gradient(circle,rgba(12,118,255,.55),transparent 70%);top:-14%;left:-8%;animation-delay:0s}
+  .aurora span:nth-child(2){width:480px;height:480px;background:radial-gradient(circle,rgba(168,85,247,.42),transparent 70%);bottom:-16%;right:-6%;animation-delay:-6s}
+  .aurora span:nth-child(3){width:360px;height:360px;background:radial-gradient(circle,rgba(232,39,44,.28),transparent 70%);top:44%;left:52%;animation-delay:-12s}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.08)}66%{transform:translate(-30px,25px) scale(.94)}}
+  .grid-lines{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 70% 60% at 50% 45%,#000,transparent 100%);pointer-events:none}
+
+  /* Card */
+  .card{position:relative;z-index:2;width:100%;max-width:420px;background:rgba(15,15,26,.72);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:2.6rem 2.2rem;box-shadow:0 32px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.02) inset;animation:cardIn .7s cubic-bezier(.22,1,.36,1) both}
+  @keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+
+  /* Brand */
+  .brand{display:flex;flex-direction:column;align-items:center;margin-bottom:.4rem}
+  .brand-logo{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(12,118,255,.18),rgba(168,85,247,.12));border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;position:relative;animation:logoFloat 4s ease-in-out infinite}
+  .brand-logo::after{content:'';position:absolute;inset:-1px;border-radius:20px;background:linear-gradient(135deg,var(--accent),transparent 60%);opacity:.35;filter:blur(12px);z-index:-1}
+  @keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  h1{font-size:1.55rem;font-weight:800;letter-spacing:-.02em;color:#fff;text-align:center}
+  .sub{color:#8b90a6;font-size:.9rem;line-height:1.6;text-align:center;margin:.5rem 0 2rem;max-width:300px;margin-left:auto;margin-right:auto}
+
+  /* Buttons */
+  .lbtn{display:flex;align-items:center;gap:.7rem;justify-content:center;padding:.95rem 1.4rem;border-radius:13px;font-weight:700;font-size:.94rem;text-decoration:none;position:relative;overflow:hidden;transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .25s;border:1px solid transparent;animation:btnIn .5s ease forwards}
+  .lbtn:nth-of-type(1){animation-delay:.15s}.lbtn:nth-of-type(2){animation-delay:.24s}.lbtn:nth-of-type(3){animation-delay:.33s}
+  @keyframes btnIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .lbtn+.lbtn{margin-top:.7rem}
+  .lbtn svg{flex-shrink:0;position:relative;z-index:1}
+  .lbtn span{position:relative;z-index:1}
+  .lbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-120%);transition:transform .6s}
+  .lbtn:hover::before{transform:translateX(120%)}
+  .lbtn:hover{transform:translateY(-2px)}
+  .lbtn:active{transform:translateY(0)}
+  .lbtn-roblox{background:linear-gradient(135deg,#ff3b41,#e8272c);color:#fff;box-shadow:0 8px 24px rgba(232,39,44,.32)}
+  .lbtn-roblox:hover{box-shadow:0 12px 32px rgba(232,39,44,.45)}
+  .lbtn-discord{background:linear-gradient(135deg,#6b76ff,#5865f2);color:#fff;box-shadow:0 8px 24px rgba(88,101,242,.32)}
+  .lbtn-discord:hover{box-shadow:0 12px 32px rgba(88,101,242,.45)}
+  .lbtn-ghost{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);color:#9aa0b8;font-weight:600;font-size:.88rem;padding:.8rem 1.4rem}
+  .lbtn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);color:#d5d9e8}
+
+  .lbtn-divider{display:flex;align-items:center;gap:.8rem;margin:1.3rem 0 .3rem;animation:btnIn .5s .3s ease forwards}
+  .lbtn-divider::before,.lbtn-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+  .lbtn-divider span{font-size:.72rem;color:#565b73;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+
+  .foot{margin-top:1.8rem;text-align:center;font-size:.74rem;color:#4a4f66;animation:btnIn .5s .4s ease forwards}
+  .foot a{color:#727892;text-decoration:none;font-weight:600}.foot a:hover{color:#9aa0b8}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+</head>
+<body>
+<div class="aurora"><span></span><span></span><span></span></div>
+<div class="grid-lines"></div>
+<div class="card">
+  <div class="brand">
+    <div class="brand-logo"><h2 style="color: white; font-weight: 900; margin: 0;">PF</h2></div>
+    <h1>Polar Follow</h1>
+  </div>
+  <p class="sub">Link your Roblox and Discord accounts to unlock member perks in our server.</p>
+  
+  <a class="lbtn lbtn-roblox" href="https://blox.link" target="_blank">
+    <img src="https://judahcustoms.org/assets/Emojis/roblox.png?v=2" width="20" height="20" alt="" style="object-fit:contain">
+    <span>Link Roblox Account</span>
+  </a>
+  <a class="lbtn lbtn-discord" href="/auth/discord">
+    <img src="https://judahcustoms.org/assets/Emojis/discord.png?v=2" width="18" height="18" alt="" style="object-fit:contain">
+    <span>Link Discord Account</span>
+  </a>
+  
+  <div class="lbtn-divider"><span>or</span></div>
+  
+  <a class="lbtn lbtn-ghost" href="/dashboard"><span>I've already linked my accounts</span></a>
+  
+  <div class="foot">Manage or unlink your accounts anytime in your <a href="/dashboard">dashboard settings</a>.</div>
+</div>
+</body>
+</html>
