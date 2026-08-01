@@ -120,7 +120,10 @@ app.get('/logout', (req, res, next) => {
 
 // Catch-All Route (Must be at the very bottom!)
 // This catches any page that hasn't been built yet (like /cart or /credits)
-app.get('/:page', (req, res, next) => {
+// Verification / Linking Page
+app.get('/verify', (req, res) => {
+    res.render('verify');
+});app.get('/:page', (req, res, next) => {
     // If they aren't logged in, send them away
     if (!req.isAuthenticated()) return res.redirect('/');
     
