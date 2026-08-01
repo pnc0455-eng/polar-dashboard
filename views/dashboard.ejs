@@ -5,57 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polar Follow</title>
     <style>
-        /* Import a rounded, bubble-like font for the greeting */
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800&family=Inter:wght@400;600;700&display=swap');
 
         body {
-            background-color: #060e1a; /* Dark blue background */
+            background-color: #060e1a;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
 
-        /* Navigation Bar */
+        /* --- Sidebar Menu Styles --- */
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 998; display: none;
+        }
+        .sidebar {
+            position: fixed; top: 0; left: -260px; width: 260px; height: 100%;
+            background: #0b1526; z-index: 999; transition: left 0.3s ease;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.5); padding-top: 0;
+            border-right: 1px solid #1a2a42;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px; border-bottom: 1px solid #1a2a42; background: #060e1a;
+        }
+        .sidebar-title { font-size: 18px; font-weight: bold; color: white; }
+        .close-btn { width: 24px; height: 24px; fill: #8892b0; cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { fill: white; }
+        .sidebar-link {
+            display: block; color: #8892b0; text-decoration: none; padding: 18px 20px;
+            font-size: 15px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #1a2a42;
+            transition: 0.2s;
+        }
+        .sidebar-link:hover { color: white; background: #111d33; padding-left: 25px; }
+
+        /* --- Navigation Bar --- */
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #0b1526;
-            padding: 15px 25px;
-            border-bottom: 1px solid #1a2a42;
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: #0b1526; padding: 15px 25px; border-bottom: 1px solid #1a2a42;
         }
         .nav-left, .nav-right { display: flex; align-items: center; gap: 20px; }
         
-        .hamburger, .cart-icon { width: 24px; height: 24px; fill: white; cursor: pointer; }
+        .hamburger, .cart-icon { width: 24px; height: 24px; fill: white; cursor: pointer; transition: 0.2s; }
+        .hamburger:hover, .cart-icon:hover { fill: #bb86fc; }
         .nav-tab-name { color: #8892b0; font-weight: bold; font-size: 16px; }
-        
-        .nav-link { color: white; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .nav-link:hover { color: #bb86fc; }
 
         .profile-nav { display: flex; align-items: center; gap: 10px; background: #111d33; padding: 5px 15px 5px 5px; border-radius: 30px; }
         .nav-pfp { width: 30px; height: 30px; border-radius: 50%; }
         .nav-username { font-size: 14px; font-weight: bold; }
-        .logout-btn { background: #ff5252; color: white; text-decoration: none; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px; }
+        .logout-btn { background: #ff5252; color: white; text-decoration: none; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px; transition: 0.2s; }
+        .logout-btn:hover { background: #ff1919; }
 
         .container { max-width: 1050px; margin: 40px auto; padding: 0 20px; }
         .subtitle { font-size: 14px; color: #8892b0; margin-bottom: 25px; border-bottom: 1px solid #1a2a42; padding-bottom: 15px; }
 
-        /* Card Styles (Dark Blue to Lighter Blue Gradient) */
+        /* --- Card Styles --- */
         .card { 
             background: linear-gradient(135deg, #0d1627, #1c2e4a); 
-            padding: 25px; 
-            border-radius: 12px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4); 
-            border: 1px solid #233759;
+            padding: 25px; border-radius: 12px; margin-bottom: 20px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4); border: 1px solid #233759;
         }
         
         .main-layout { display: flex; gap: 25px; }
         .left-col { flex: 2; }
         .right-col { flex: 1; }
 
-        /* Greeting Section */
+        /* --- Greeting Section --- */
         .greeting-text { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
         .wave-icon { width: 32px; height: 32px; fill: white; }
         .user-tag-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
@@ -63,24 +81,24 @@
         .red-status { color: #ff5252; background: rgba(255, 82, 82, 0.15); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,82,82,0.3); }
         .last-visit { color: #8892b0; font-size: 12px; margin-top: 15px; }
 
-        /* Stats Grid */
+        /* --- Stats Grid --- */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
         .stat-box { background: rgba(11, 21, 38, 0.6); padding: 20px; border-radius: 8px; border: 1px solid #1a2a42; }
         .stat-num { font-size: 26px; font-weight: bold; margin-top: 8px; color: #ffffff; }
         .info-label { color: #8892b0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Right Column Info Rows */
+        /* --- Right Column Info Rows --- */
         .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #1a2a42; font-size: 14px; }
         .info-row:last-child { border-bottom: none; }
         .section-header { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: white; display: flex; align-items: center; gap: 10px; }
         .roblox-icon { width: 20px; height: 20px; fill: white; }
 
-        /* Roblox Warning Card */
+        /* --- Roblox Warning Card --- */
         .roblox-card { background: rgba(11, 21, 38, 0.6); padding: 20px; border-radius: 8px; border: 1px dashed #3a4b6b; margin-top: 20px; }
         .roblox-warning-title { font-weight: bold; color: #8892b0; font-size: 14px; margin-bottom: 5px; }
         .roblox-warning-text { color: #5c6a8a; font-size: 12px; }
 
-        /* Add Credits View (Hidden by default) */
+        /* --- Add Credits View --- */
         #credits-view { display: none; text-align: center; padding: 60px 20px; }
         .credits-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
         .credits-desc { color: #8892b0; font-size: 15px; margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto; }
@@ -92,16 +110,25 @@
 </head>
 <body>
 
+<!-- Sidebar & Overlay -->
+<div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-title">Menu</div>
+        <svg class="close-btn" onclick="toggleSidebar()" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </div>
+    <a class="sidebar-link" onclick="switchTab('account')">Account</a>
+    <a class="sidebar-link" onclick="switchTab('credits')">Add Credits</a>
+</div>
+
 <!-- Navigation Bar -->
 <nav class="navbar">
     <div class="nav-left">
-        <!-- Hamburger Icon -->
-        <svg class="hamburger" onclick="switchTab('account')" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        <!-- Hamburger Icon now opens the sidebar -->
+        <svg class="hamburger" onclick="toggleSidebar()" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
         <span class="nav-tab-name" id="current-tab-text">Account</span>
-        <a class="nav-link" onclick="switchTab('credits')">Add Credits</a>
     </div>
     <div class="nav-right">
-        <!-- Cart Icon -->
         <svg class="cart-icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
         
         <div class="profile-nav">
@@ -120,10 +147,8 @@
         <!-- Left Column -->
         <div class="left-col">
             <div class="card">
-                <!-- Dynamic Greeting -->
                 <div class="greeting-text">
                     <span id="greeting-message">Good evening</span>, <%= user.username %>
-                    <!-- Wave SVG Icon -->
                     <svg class="wave-icon" viewBox="0 0 24 24"><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm1 14h-2v2h2v-2zm0-10h-2v7h2V6z"/></svg>
                 </div>
                 
@@ -158,8 +183,6 @@
         <!-- Right Column -->
         <div class="right-col">
             <div class="card">
-                
-                <!-- Format the Discord Creation Date directly in EJS -->
                 <% 
                    const discordCreationDate = new Date(Number((BigInt(user.id) >> 22n) + 1420070400000n));
                    const formattedCreation = discordCreationDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -179,10 +202,8 @@
                     <span><%= formattedCreation %></span>
                 </div>
 
-                <!-- Roblox Section -->
                 <div class="roblox-card">
                     <div class="section-header">
-                        <!-- Roblox SVG Icon -->
                         <svg class="roblox-icon" viewBox="0 0 24 24"><path d="M5.368 2.032L21.968 5.37l-3.338 16.598L2.032 18.63 5.368 2.032zm3.882 12.015l5.228 1.05-1.05 5.228-5.228-1.05 1.05-5.228z"/></svg>
                         Roblox Profile
                     </div>
@@ -201,7 +222,6 @@
     
     <button class="link-btn">
         Please link a Roblox account first 
-        <!-- Small arrow inside button -->
         <svg style="width: 16px; height: 16px; fill: #060e1a;" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
     </button>
 
@@ -209,7 +229,21 @@
 </div>
 
 <script>
-    // 1. Calculate dynamic greeting based on user's local time
+    // Toggle Sidebar logic
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+            overlay.style.display = 'none';
+        } else {
+            sidebar.classList.add('open');
+            overlay.style.display = 'block';
+        }
+    }
+
+    // Dynamic greeting based on user's local time
     const hour = new Date().getHours();
     let greeting = "Good evening";
     if (hour >= 5 && hour < 12) greeting = "Good morning";
@@ -218,14 +252,11 @@
     else greeting = "Good night";
     document.getElementById("greeting-message").innerText = greeting;
 
-    // 2. Relative time script (minutes ago / hours ago)
-    // We capture the exact timestamp when the dashboard loaded
+    // Relative time script
     const pageLoadTime = Date.now(); 
-    
     setInterval(() => {
         const secondsPassed = Math.floor((Date.now() - pageLoadTime) / 1000);
         let timeString = "Just now";
-        
         if (secondsPassed >= 3600) {
             const hours = Math.floor(secondsPassed / 3600);
             timeString = `${hours} hour${hours > 1 ? 's' : ''} ago`;
@@ -233,23 +264,26 @@
             const minutes = Math.floor(secondsPassed / 60);
             timeString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
         }
-        
         document.getElementById("relative-time").innerText = timeString;
-    }, 10000); // Updates every 10 seconds
+    }, 10000);
 
-    // 3. Navigation Tab Switcher
+    // Tab Switcher logic
     function switchTab(tabName) {
-        // Hide both views first
         document.getElementById("account-view").style.display = "none";
         document.getElementById("credits-view").style.display = "none";
 
-        // Show the requested view
         if (tabName === 'account') {
             document.getElementById("account-view").style.display = "block";
             document.getElementById("current-tab-text").innerText = "Account";
         } else if (tabName === 'credits') {
             document.getElementById("credits-view").style.display = "block";
             document.getElementById("current-tab-text").innerText = "Add Credits";
+        }
+
+        // Close sidebar if it's open when a tab is clicked
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.classList.contains('open')) {
+            toggleSidebar();
         }
     }
 </script>
