@@ -43,7 +43,7 @@ passport.deserializeUser((obj, done) => done(null, obj));
 
 // Routes
 app.get('/', (req, res) => {
-    res.send('<a href="/auth/discord" style="color: #00FF00; font-family: sans-serif;">Verify and Login with Discord</a>');
+    res.render('login');
 });
 
 app.get('/auth/discord', passport.authenticate('discord'));
@@ -88,9 +88,12 @@ app.get('/dashboard', async (req, res) => {
         lastVisit: new Date().toLocaleTimeString()
     });
 });
+
 app.get('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) return next(err);
         res.redirect('/');
     });
-});app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
