@@ -8,14 +8,17 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuration placeholders
+// ---------- DISCORD SETTINGS ---------- //
 const DISCORD_CLIENT_ID = '1532988574583226538';
 const DISCORD_CLIENT_SECRET = 'qSX44vleIXgec44EU24bfuimfolc8Ron';
 const CALLBACK_URL = 'https://polar-dashboard-1.onrender.com/auth/discord/callback';
 const YOUR_GUILD_ID = '1507403006357016698'; 
 
-// Replace this with your actual Bloxlink Developer API key when you have it!
-const BLOXLINK_API_KEY = 'YOUR_BLOXLINK_API_KEY';
+// ---------- ROBLOX SETTINGS ---------- //
+// Paste your new Roblox Client ID and Secret inside these quotes!
+const ROBLOX_CLIENT_ID = 'YOUR_ROBLOX_CLIENT_ID';
+const ROBLOX_CLIENT_SECRET = 'YOUR_ROBLOX_CLIENT_SECRET';
+const ROBLOX_REDIRECT_URI = 'https://polar-dashboard-1.onrender.com/auth/roblox/callback';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -49,44 +52,73 @@ app.get('/', (req, res) => {
     res.render('login');
 });
 
+// DISCORD AUTH ROUTES
 app.get('/auth/discord', passport.authenticate('discord'));
-
 app.get('/auth/discord/callback', passport.authenticate('discord', {
     failureRedirect: '/'
 }), (req, res) => res.redirect('/dashboard'));
 
-// Dashboard Page
+// ROBLOX AUTH ROUTES
+app.get('/auth/roblox', (req, res) => {
+    const redirect = encodeURIComponent(ROBLOX_REDIRECT_URI);
+    const robloxAuthUrl = `https://apis.roblox.com/oauth/v1/authorize?client_id=${ROBLOX_CLIENT_ID}&redirect_uri=${redirect}&scope=openid profile&response_type=code`;
+    res.redirect(robloxAuthUrl);
+});
+
+app.get('/auth/roblox/callback', async (req, res) => {
+    const { code } = req.query;
+    if (!code) return res.redirect('/verify');
+
+    try {
+        // 1. Exchange the code for an Access Token
+        const params = new URLSearchParams();
+        params.append('client_id', ROBLOX_CLIENT_ID);
+        params.append('client_secret', ROBLOX_CLIENT_SECRET);
+        params.append('grant_type', 'authorization_code');
+        params.append('code', code);
+
+        const tokenRes = await axios.post('https://apis.roblox.com/oauth/v1/token', params.toString(), {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+
+        // 2. Use the Access Token to get the user's real Roblox Profile
+        const userRes = await axios.get('https://apis.roblox.com/oauth/v1/userinfo', {
+            headers: { 'Authorization': `Bearer ${tokenRes.data.access_token}` }
+        });
+
+        // 3. Save it to their session memory
+        req.session.robloxData = {
+            username: userRes.data.preferred_username,
+            displayName: userRes.data.nickname || userRes.data.preferred_username,
+            id: userRes.data.sub
+        };
+
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.log("Roblox Auth Error:", err.response ? err.response.data : err.message);
+        res.redirect('/verify');
+    }
+});
+
+
+// PAGES
 app.get('/dashboard', async (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/');
 
     const user = req.user.profile;
     const accessToken = req.user.accessToken;
     
-    let robloxData = null;
+    // Check if they linked Roblox in this session!
+    let robloxData = req.session.robloxData || null;
     let joinedAt = 'Unknown';
 
     try {
-        const bloxlinkRes = await axios.get(`https://api.blox.link/v4/public/guilds/${YOUR_GUILD_ID}/discord-to-roblox/${user.id}`, {
-            headers: { 'Authorization': BLOXLINK_API_KEY }
-        });
-        
-        // Pulls actual real username from Roblox once Bloxlink key is added
-        if (bloxlinkRes.data && bloxlinkRes.data.robloxID) {
-            const rblxId = bloxlinkRes.data.robloxID;
-            const robloxApiRes = await axios.get(`https://users.roblox.com/v1/users/${rblxId}`);
-            robloxData = { 
-                username: robloxApiRes.data.name, 
-                displayName: robloxApiRes.data.displayName 
-            };
-        }
-
         const guildMemberRes = await axios.get(`https://discord.com/api/users/@me/guilds/${YOUR_GUILD_ID}/member`, {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         joinedAt = new Date(guildMemberRes.data.joined_at).toLocaleDateString();
-
     } catch (err) {
-        console.log("Could not fetch external API data");
+        console.log("Could not fetch Discord guild data");
     }
 
     res.render('dashboard', {
@@ -99,7 +131,6 @@ app.get('/dashboard', async (req, res) => {
     });
 });
 
-// Inventory Page
 app.get('/inventory', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/');
 
@@ -110,27 +141,22 @@ app.get('/inventory', (req, res) => {
     });
 });
 
-// Logout Route
+app.get('/verify', (req, res) => {
+    res.render('verify');
+});
+
 app.get('/logout', (req, res, next) => {
+    req.session.destroy();
     req.logout((err) => {
         if (err) return next(err);
         res.redirect('/');
     });
 });
 
-// Catch-All Route (Must be at the very bottom!)
-// This catches any page that hasn't been built yet (like /cart or /credits)
-// Verification / Linking Page
-app.get('/verify', (req, res) => {
-    res.render('verify');
-});app.get('/:page', (req, res, next) => {
-    // If they aren't logged in, send them away
+app.get('/:page', (req, res, next) => {
     if (!req.isAuthenticated()) return res.redirect('/');
-    
-    // Ignore backend auth routes
     if (req.params.page.startsWith('auth')) return next();
     
-    // Send a temporary "Coming Soon" screen
     res.send(`
         <body style="background-color: #060e1a; color: white; font-family: sans-serif; text-align: center; padding-top: 100px;">
             <h1 style="color: #00FF00;">Coming Soon</h1>
