@@ -53,6 +53,9 @@
         .hamburger:hover, .cart-icon:hover { fill: #bb86fc; }
         .nav-tab-name { color: #8892b0; font-weight: bold; font-size: 16px; }
 
+        .nav-text-link { color: #8892b0; text-decoration: none; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
+        .nav-text-link:hover { color: white; }
+
         .profile-nav { display: flex; align-items: center; gap: 10px; background: #111d33; padding: 5px 15px 5px 5px; border-radius: 30px; }
         .nav-pfp { width: 30px; height: 30px; border-radius: 50%; }
         .nav-username { font-size: 14px; font-weight: bold; }
@@ -79,7 +82,9 @@
         .user-tag-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
         .purple-tag { color: #bb86fc; font-size: 14px; font-weight: bold; }
         .red-status { color: #ff5252; background: rgba(255, 82, 82, 0.15); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,82,82,0.3); }
+        .green-status { color: #00FF00; background: rgba(0, 255, 0, 0.15); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; border: 1px solid rgba(0,255,0,0.3); }
         .last-visit { color: #8892b0; font-size: 12px; margin-top: 15px; }
+        .pfp-large { width: 50px; height: 50px; border-radius: 50%; }
 
         /* --- Stats Grid --- */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
@@ -93,19 +98,21 @@
         .section-header { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: white; display: flex; align-items: center; gap: 10px; }
         .roblox-icon { width: 20px; height: 20px; fill: white; }
 
-        /* --- Roblox Warning Card --- */
+        /* --- Roblox Cards --- */
         .roblox-card { background: rgba(11, 21, 38, 0.6); padding: 20px; border-radius: 8px; border: 1px dashed #3a4b6b; margin-top: 20px; }
         .roblox-warning-title { font-weight: bold; color: #8892b0; font-size: 14px; margin-bottom: 5px; }
         .roblox-warning-text { color: #5c6a8a; font-size: 12px; }
 
-        /* --- Add Credits View --- */
-        #credits-view { display: none; text-align: center; padding: 60px 20px; }
-        .credits-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
-        .credits-desc { color: #8892b0; font-size: 15px; margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .link-btn { background: white; color: #060e1a; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; font-size: 15px; transition: 0.2s; border: none; cursor: pointer; }
+        .roblox-action-box { text-align: center; padding: 40px 20px; margin-top: 20px; border: 1px dashed #3a4b6b; background: rgba(11, 21, 38, 0.4); border-radius: 12px; }
+        .roblox-action-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: white; }
+        .roblox-action-desc { color: #8892b0; font-size: 14px; margin-bottom: 25px; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .link-btn { background: white; color: #060e1a; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; font-size: 14px; transition: 0.2s; border: none; cursor: pointer; }
         .link-btn:hover { background: #e0e0e0; }
-        .back-link { display: block; color: #8892b0; text-decoration: underline; font-size: 13px; margin-top: 20px; cursor: pointer; }
+        .back-link { display: block; color: #8892b0; text-decoration: underline; font-size: 12px; margin-top: 20px; cursor: pointer; }
 
+        /* --- Add Credits View --- */
+        #credits-view { display: none; padding: 60px 20px; }
+        
     </style>
 </head>
 <body>
@@ -118,17 +125,19 @@
         <svg class="close-btn" onclick="toggleSidebar()" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
     </div>
     <a class="sidebar-link" onclick="switchTab('account')">Account</a>
-    <a class="sidebar-link" onclick="switchTab('credits')">Add Credits</a>
 </div>
 
 <!-- Navigation Bar -->
 <nav class="navbar">
     <div class="nav-left">
-        <!-- Hamburger Icon now opens the sidebar -->
+        <!-- Hamburger Icon -->
         <svg class="hamburger" onclick="toggleSidebar()" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
         <span class="nav-tab-name" id="current-tab-text">Account</span>
     </div>
     <div class="nav-right">
+        <!-- Add Credits moved to Navbar -->
+        <a class="nav-text-link" onclick="switchTab('credits')">Add Credits</a>
+        
         <svg class="cart-icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
         
         <div class="profile-nav">
@@ -178,6 +187,19 @@
                     <div class="stat-num">0</div>
                 </div>
             </div>
+
+            <!-- New Roblox Action Box on Home Page -->
+            <div class="roblox-action-box">
+                <div class="roblox-action-title">Link your roblox account first</div>
+                <div class="roblox-action-desc">The dashboard needs a verified Roblox account before you can use it. It takes less than a minute.</div>
+                
+                <button class="link-btn">
+                    Please link a Roblox account first 
+                    <svg style="width: 16px; height: 16px; fill: #060e1a;" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </button>
+
+                <a class="back-link" onclick="switchTab('account')">view your account page instead</a>
+            </div>
         </div>
 
         <!-- Right Column -->
@@ -188,6 +210,16 @@
                    const formattedCreation = discordCreationDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
                 %>
 
+                <!-- Restored Profile Header with Connected Status -->
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <img src="<%= avatarUrl %>" alt="Profile" class="pfp-large">
+                    <div>
+                        <div style="font-weight: bold; font-size: 16px;"><%= user.username %></div>
+                        <div style="font-size: 12px; color: #8892b0;"><%= user.id %></div>
+                    </div>
+                    <span class="green-status" style="margin-left: auto;">Connected</span>
+                </div>
+
                 <div class="section-header">Discord Profile</div>
                 <div class="info-row">
                     <span class="info-label">Account</span>
@@ -197,9 +229,24 @@
                     <span class="info-label">ID</span>
                     <span style="color: #8892b0;"><%= user.id %></span>
                 </div>
+                <!-- Restored Display Name -->
+                <div class="info-row">
+                    <span class="info-label">Display Name</span>
+                    <span><%= user.global_name || user.username %></span>
+                </div>
+                <!-- Restored Nickname -->
+                <div class="info-row">
+                    <span class="info-label">Nickname</span>
+                    <span><%= user.username %></span>
+                </div>
                 <div class="info-row">
                     <span class="info-label">Account Created</span>
                     <span><%= formattedCreation %></span>
+                </div>
+                <!-- Restored Joined Server -->
+                <div class="info-row">
+                    <span class="info-label">Joined Server</span>
+                    <span><%= joinedAt %></span>
                 </div>
 
                 <div class="roblox-card">
@@ -217,19 +264,11 @@
 
 <!-- ADD CREDITS VIEW -->
 <div id="credits-view" class="container">
-    <div class="credits-title">Link your roblox account first</div>
-    <div class="credits-desc">The dashboard needs a verified Roblox account before you can use it. It takes less than a minute.</div>
-    
-    <button class="link-btn">
-        Please link a Roblox account first 
-        <svg style="width: 16px; height: 16px; fill: #060e1a;" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-    </button>
-
-    <a class="back-link" onclick="switchTab('account')">view your account page instead</a>
+    <h2>Credits Page</h2>
+    <p style="color: #8892b0;">Your credits will appear here.</p>
 </div>
 
 <script>
-    // Toggle Sidebar logic
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
@@ -243,7 +282,6 @@
         }
     }
 
-    // Dynamic greeting based on user's local time
     const hour = new Date().getHours();
     let greeting = "Good evening";
     if (hour >= 5 && hour < 12) greeting = "Good morning";
@@ -252,7 +290,6 @@
     else greeting = "Good night";
     document.getElementById("greeting-message").innerText = greeting;
 
-    // Relative time script
     const pageLoadTime = Date.now(); 
     setInterval(() => {
         const secondsPassed = Math.floor((Date.now() - pageLoadTime) / 1000);
@@ -267,7 +304,6 @@
         document.getElementById("relative-time").innerText = timeString;
     }, 10000);
 
-    // Tab Switcher logic
     function switchTab(tabName) {
         document.getElementById("account-view").style.display = "none";
         document.getElementById("credits-view").style.display = "none";
@@ -280,7 +316,6 @@
             document.getElementById("current-tab-text").innerText = "Add Credits";
         }
 
-        // Close sidebar if it's open when a tab is clicked
         const sidebar = document.getElementById('sidebar');
         if (sidebar.classList.contains('open')) {
             toggleSidebar();
