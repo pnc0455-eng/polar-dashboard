@@ -9,10 +9,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configuration placeholders - You will replace these later when deploying
-const DISCORD_CLIENT_ID = 'YOUR_DISCORD_CLIENT_ID';
-const DISCORD_CLIENT_SECRET = 'YOUR_DISCORD_CLIENT_SECRET';
-const CALLBACK_URL = 'YOUR_CALLBACK_URL';
-const YOUR_GUILD_ID = 'YOUR_DISCORD_SERVER_ID'; 
+const DISCORD_CLIENT_ID = '1532988574583226538';
+const DISCORD_CLIENT_SECRET = 'qSX44vleIXgec44EU24bfuimfolc8Ron';
+const CALLBACK_URL = '[https://polar-dashboard-1.onrender.com/auth/discord/callback](https://polar-dashboard-1.onrender.com/auth/discord/callback)';
+const YOUR_GUILD_ID = '1507403006357016698'; 
 const BLOXLINK_API_KEY = 'YOUR_BLOXLINK_API_KEY';
 
 app.set('view engine', 'ejs');
