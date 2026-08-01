@@ -88,5 +88,9 @@ app.get('/dashboard', async (req, res) => {
         lastVisit: new Date().toLocaleTimeString()
     });
 });
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get('/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err);
+        res.redirect('/');
+    });
+});app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
