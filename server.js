@@ -9,6 +9,10 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Essential for allowing the frontend buttons to send data to the backend
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // ---------- DATABASE SETUP ---------- //
 const DB_FILE = path.join(__dirname, 'database.json');
 
@@ -216,10 +220,11 @@ app.get('/verify', (req, res) => {
 });
 
 app.get('/logout', (req, res, next) => {
-    req.session.destroy();
     req.logout((err) => {
         if (err) return next(err);
-        res.redirect('/login');
+        req.session.destroy(() => {
+            res.redirect('/login');
+        });
     });
 });
 
@@ -262,8 +267,24 @@ app.post('/api/account/refresh', async (req, res) => {
 // API STUBS FOR FRONTEND UI SCRIPTS
 app.get('/api/dash/state', (req, res) => {
     if (!req.isAuthenticated()) return res.json({ ok: false });
-    res.json({ ok: true, lastSeenAt: req.session.lastVisit });
+    const db = readDB();
+    const userDb = db.users[req.user.profile.id] || {};
+    res.json({ 
+        ok: true, 
+        lastSeenAt: req.session.lastVisit,
+        tourSeen: userDb.tourSeen === true
+    });
 });
+
+app.post('/api/dash/tour-done', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ ok: false });
+    const db = readDB();
+    if (!db.users[req.user.profile.id]) db.users[req.user.profile.id] = {};
+    db.users[req.user.profile.id].tourSeen = true;
+    writeDB(db);
+    res.json({ ok: true });
+});
+
 app.get('/api/banner', (req, res) => res.json({ banners: [] }));
 app.get('/api/cart/count', (req, res) => res.json({ count: 0 }));
 app.get('/api/credits/balance', (req, res) => res.json({ balance: 0 }));
