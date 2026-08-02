@@ -65,7 +65,21 @@ app.get('/auth/roblox', (req, res) => {
 
 app.get('/auth/roblox/callback', async (req, res) => {
     const { code } = req.query;
-    if (!code) return res.redirect('/verify');
+    
+    // Safely get user info to display on the success page
+    const userProfile = req.user ? req.user.profile : null;
+    const avatarUrl = userProfile ? `https://cdn.discordapp.com/avatars/${userProfile.id}/${userProfile.avatar}.png` : '';
+
+    if (!code) {
+        return res.render('status', { 
+            status: 'error', 
+            title: 'Link Failed', 
+            message: 'No authorization code provided. Please start again.', 
+            user: userProfile, 
+            avatarUrl: avatarUrl, 
+            roblox: null 
+        });
+    }
 
     try {
         const params = new URLSearchParams();
@@ -88,10 +102,26 @@ app.get('/auth/roblox/callback', async (req, res) => {
             id: userRes.data.sub
         };
 
-        res.redirect('/dashboard');
+        // Render the Success Page!
+        res.render('status', {
+            status: 'success',
+            title: 'Account Linked',
+            message: 'Your Roblox account has been successfully linked to your profile.',
+            user: userProfile,
+            avatarUrl: avatarUrl,
+            roblox: req.session.robloxData
+        });
+        
     } catch (err) {
         console.log("Roblox Auth Error:", err.response ? err.response.data : err.message);
-        res.redirect('/verify');
+        res.render('status', { 
+            status: 'error', 
+            title: 'Link Expired', 
+            message: 'Your verification link expired (10 minutes). Please start again.', 
+            user: userProfile, 
+            avatarUrl: avatarUrl, 
+            roblox: null 
+        });
     }
 });
 
