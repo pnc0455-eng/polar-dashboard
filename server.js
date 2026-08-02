@@ -214,10 +214,13 @@ app.get('/inventory', (req, res) => {
     });
 });
 
+// VERIFY PAGE
 app.get('/verify', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/login');
     res.render('verify');
 });
+
+// CREDITS PAGE
 app.get('/credits', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/login');
     res.render('credits', {
@@ -226,6 +229,18 @@ app.get('/credits', (req, res) => {
         roblox: req.session.robloxData || null
     });
 });
+
+// CART PAGE
+app.get('/cart', (req, res) => {
+    if (!req.isAuthenticated()) return res.redirect('/login');
+    res.render('cart', {
+        user: req.user.profile,
+        avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
+        roblox: req.session.robloxData || null
+    });
+});
+
+// LOGOUT
 app.get('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) return next(err);
@@ -300,9 +315,10 @@ app.get('/api/achievements/unseen', (req, res) => res.json({ list: [] }));
 app.post('/api/log/click', (req, res) => res.json({ ok: true }));
 app.get('/api/session/heartbeat', (req, res) => res.json({ ok: true }));
 
+// CATCH-ALL
 app.get('/:page', (req, res, next) => {
     if (!req.isAuthenticated()) return res.redirect('/login');
-    if (req.params.page.startsWith('auth')) return next();
+    if (req.params.page.startsWith('auth') || req.params.page.startsWith('api')) return next();
     
     res.send(`
         <body style="background-color: #060e1a; color: white; font-family: sans-serif; text-align: center; padding-top: 100px;">
