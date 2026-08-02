@@ -15,9 +15,8 @@ const CALLBACK_URL = 'https://polar-dashboard-1.onrender.com/auth/discord/callba
 const YOUR_GUILD_ID = '1507403006357016698'; 
 
 // ---------- ROBLOX SETTINGS ---------- //
-// Paste your new Roblox Client ID and Secret inside these quotes!
-const ROBLOX_CLIENT_ID = '4032802800945626524';
-const ROBLOX_CLIENT_SECRET = 'RBX-GXSknhrb20GM9wncCxR_4IQa3a85Nc4dWeApOTjgZ7XORf5uAad-fN101SFfp_7F';
+const ROBLOX_CLIENT_ID = 'YOUR_ROBLOX_CLIENT_ID';
+const ROBLOX_CLIENT_SECRET = 'YOUR_ROBLOX_CLIENT_SECRET';
 const ROBLOX_REDIRECT_URI = 'https://polar-dashboard-1.onrender.com/auth/roblox/callback';
 
 app.set('view engine', 'ejs');
@@ -33,7 +32,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Set up Discord OAuth2
 passport.use(new DiscordStrategy({
     clientID: DISCORD_CLIENT_ID,
     clientSecret: DISCORD_CLIENT_SECRET,
@@ -70,7 +68,6 @@ app.get('/auth/roblox/callback', async (req, res) => {
     if (!code) return res.redirect('/verify');
 
     try {
-        // 1. Exchange the code for an Access Token
         const params = new URLSearchParams();
         params.append('client_id', ROBLOX_CLIENT_ID);
         params.append('client_secret', ROBLOX_CLIENT_SECRET);
@@ -81,12 +78,10 @@ app.get('/auth/roblox/callback', async (req, res) => {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 
-        // 2. Use the Access Token to get the user's real Roblox Profile
         const userRes = await axios.get('https://apis.roblox.com/oauth/v1/userinfo', {
             headers: { 'Authorization': `Bearer ${tokenRes.data.access_token}` }
         });
 
-        // 3. Save it to their session memory
         req.session.robloxData = {
             username: userRes.data.preferred_username,
             displayName: userRes.data.nickname || userRes.data.preferred_username,
@@ -100,15 +95,12 @@ app.get('/auth/roblox/callback', async (req, res) => {
     }
 });
 
-
-// PAGES
+// DASHBOARD PAGE
 app.get('/dashboard', async (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/');
 
     const user = req.user.profile;
     const accessToken = req.user.accessToken;
-    
-    // Check if they linked Roblox in this session!
     let robloxData = req.session.robloxData || null;
     let joinedAt = 'Unknown';
 
@@ -131,13 +123,17 @@ app.get('/dashboard', async (req, res) => {
     });
 });
 
+// INVENTORY PAGE
 app.get('/inventory', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/');
 
     const user = req.user.profile;
+    const robloxData = req.session.robloxData || null;
+
     res.render('inventory', {
         user: user,
-        avatarUrl: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        avatarUrl: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
+        roblox: robloxData
     });
 });
 
