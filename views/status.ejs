@@ -54,14 +54,12 @@
           </div>
         </div>
         <div class="account-row">
-          <div class="av-ph">
-            <img src="https://judahcustoms.org/assets/Emojis/roblox.png" style="width:20px;height:20px;object-fit:contain" alt="">
-          </div>
-          <div class="acc-info">
-            <div class="acc-label">Roblox</div>
-            <div class="acc-name"><%= roblox.username %></div>
-          </div>
-        </div>
+       <img src="<%= roblox.avatarUrl %>" class="av" alt="">
+       <div class="acc-info">
+         <div class="acc-label">Roblox</div>
+         <div class="acc-name"><%= roblox.displayName %> (@<%= roblox.username %>)</div>
+       </div>
+     </div>
       </div>
     <% } %>
 
