@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= title %> — Polar Follow</title>
+  <style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#0d0d14;color:#e0e0e0;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+  main{background:#13131f;border:1px solid #1e1e30;border-radius:16px;padding:2.5rem 2rem;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4)}
+  h1{font-size:1.4rem;color:#fff;margin-bottom:.4rem;font-weight:700}
+  .sub{color:#666;font-size:.9rem;line-height:1.55;margin-bottom:2rem}
+  a.btn{display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.9rem 1.5rem;border-radius:10px;font-weight:600;font-size:.95rem;text-decoration:none;transition:opacity .15s;width:100%}
+  a.btn+a.btn{margin-top:.65rem}
+  a.btn:hover{opacity:.82}
+  .btn-polar{background:#0c76ff;color:#fff}
+  .divider{height:1px;background:#1a1a28;margin:1.25rem 0}
+  .badge-ok{display:inline-flex;align-items:center;gap:.4rem;background:#0e2b10;color:#4caf50;border-radius:999px;padding:.3rem 1rem;font-size:.82rem;font-weight:600;margin-bottom:1.5rem;border:1px solid #1a4a1e}
+  .badge-err{display:inline-flex;align-items:center;gap:.4rem;background:#2b1010;color:#e05252;border-radius:999px;padding:.3rem 1rem;font-size:.82rem;font-weight:600;margin-bottom:1.5rem;border:1px solid #4a1a1a}
+  .accounts{background:#0a0a10;border-radius:10px;border:1px solid #1a1a28;margin-bottom:1.25rem;overflow:hidden}
+  .account-row{display:flex;align-items:center;gap:.85rem;padding:.9rem 1rem}
+  .account-row+.account-row{border-top:1px solid #1a1a28}
+  .av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#1e1e30;flex-shrink:0;border:1px solid rgba(255,255,255,.05)}
+  .av-ph{width:38px;height:38px;border-radius:50%;background:#1e1e30;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;border:1px solid rgba(255,255,255,.05)}
+  .acc-info{text-align:left}
+  .acc-label{font-size:.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:.06em}
+  .acc-name{font-size:.92rem;color:#ddd;font-weight:500;margin-top:.1rem}
+  </style>
+</head>
+<body>
+  <main>
+    <% if (status === 'success') { %>
+      <div class="badge-ok">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Success
+      </div>
+    <% } else { %>
+      <div class="badge-err">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        Error
+      </div>
+    <% } %>
+
+    <h1><%= title %></h1>
+    <p class="sub"><%= message %></p>
+
+    <% if (status === 'success' && user && roblox) { %>
+      <div class="accounts">
+        <div class="account-row">
+          <img src="<%= avatarUrl %>" class="av" alt="">
+          <div class="acc-info">
+            <div class="acc-label">Discord</div>
+            <div class="acc-name">@<%= user.username %></div>
+          </div>
+        </div>
+        <div class="account-row">
+          <div class="av-ph">
+            <img src="https://judahcustoms.org/assets/Emojis/roblox.png" style="width:20px;height:20px;object-fit:contain" alt="">
+          </div>
+          <div class="acc-info">
+            <div class="acc-label">Roblox</div>
+            <div class="acc-name"><%= roblox.username %></div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <a href="/dashboard" class="btn btn-polar">Continue to Dashboard</a>
+  </main>
+</body>
+</html>
