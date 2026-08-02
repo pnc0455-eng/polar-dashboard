@@ -16,8 +16,8 @@ const YOUR_GUILD_ID = '1507403006357016698';
 
 // ---------- ROBLOX SETTINGS ---------- //
 // Paste your new Roblox Client ID and Secret inside these quotes!
-const ROBLOX_CLIENT_ID = 'YOUR_ROBLOX_CLIENT_ID';
-const ROBLOX_CLIENT_SECRET = 'YOUR_ROBLOX_CLIENT_SECRET';
+const ROBLOX_CLIENT_ID = '4032802800945626524';
+const ROBLOX_CLIENT_SECRET = 'RBX-GXSknhrb20GM9wncCxR_4IQa3a85Nc4dWeApOTjgZ7XORf5uAad-fN101SFfp_7F';
 const ROBLOX_REDIRECT_URI = 'https://polar-dashboard-1.onrender.com/auth/roblox/callback';
 
 app.set('view engine', 'ejs');
