@@ -66,18 +66,13 @@ app.get('/auth/roblox', (req, res) => {
 app.get('/auth/roblox/callback', async (req, res) => {
     const { code } = req.query;
     
-    // Safely get user info to display on the success page
     const userProfile = req.user ? req.user.profile : null;
     const avatarUrl = userProfile ? `https://cdn.discordapp.com/avatars/${userProfile.id}/${userProfile.avatar}.png` : '';
 
     if (!code) {
         return res.render('status', { 
-            status: 'error', 
-            title: 'Link Failed', 
-            message: 'No authorization code provided. Please start again.', 
-            user: userProfile, 
-            avatarUrl: avatarUrl, 
-            roblox: null 
+            status: 'error', title: 'Link Failed', message: 'No authorization code provided. Please start again.', 
+            user: userProfile, avatarUrl: avatarUrl, roblox: null 
         });
     }
 
@@ -96,36 +91,40 @@ app.get('/auth/roblox/callback', async (req, res) => {
             headers: { 'Authorization': `Bearer ${tokenRes.data.access_token}` }
         });
 
-        // Format the date exactly like "2 August 2026"
+        const robloxId = userRes.data.sub;
+        let robloxAvatarUrl = 'https://judahcustoms.org/assets/Emojis/roblox.png'; // Fallback
+        
+        // Safely fetch the actual image URL from Roblox's Thumbnail API
+        try {
+            const thumbRes = await axios.get(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${robloxId}&size=150x150&format=Png&isCircular=true`);
+            if (thumbRes.data && thumbRes.data.data && thumbRes.data.data.length > 0) {
+                robloxAvatarUrl = thumbRes.data.data[0].imageUrl;
+            }
+        } catch (err) {
+            console.log("Failed to fetch Roblox avatar", err.message);
+        }
+
         const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
         req.session.robloxData = {
             username: userRes.data.preferred_username,
             displayName: userRes.data.nickname || userRes.data.preferred_username,
-            id: userRes.data.sub,
+            id: robloxId,
+            avatarUrl: robloxAvatarUrl,
             verifiedAt: formattedDate,
             updatedAt: formattedDate
         };
 
-        // Render the Success Page!
         res.render('status', {
-            status: 'success',
-            title: 'Account Linked',
-            message: 'Your Roblox account has been successfully linked to your profile.',
-            user: userProfile,
-            avatarUrl: avatarUrl,
-            roblox: req.session.robloxData
+            status: 'success', title: 'Account Linked', message: 'Your Roblox account has been successfully linked to your profile.',
+            user: userProfile, avatarUrl: avatarUrl, roblox: req.session.robloxData
         });
         
     } catch (err) {
         console.log("Roblox Auth Error:", err.response ? err.response.data : err.message);
         res.render('status', { 
-            status: 'error', 
-            title: 'Link Expired', 
-            message: 'Your verification link expired (10 minutes). Please start again.', 
-            user: userProfile, 
-            avatarUrl: avatarUrl, 
-            roblox: null 
+            status: 'error', title: 'Link Expired', message: 'Your verification link expired (10 minutes). Please start again.', 
+            user: userProfile, avatarUrl: avatarUrl, roblox: null 
         });
     }
 });
@@ -161,14 +160,10 @@ app.get('/dashboard', async (req, res) => {
 // INVENTORY PAGE
 app.get('/inventory', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/');
-
-    const user = req.user.profile;
-    const robloxData = req.session.robloxData || null;
-
     res.render('inventory', {
-        user: user,
-        avatarUrl: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
-        roblox: robloxData
+        user: req.user.profile,
+        avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
+        roblox: req.session.robloxData || null
     });
 });
 
@@ -184,17 +179,22 @@ app.get('/logout', (req, res, next) => {
     });
 });
 
-// ACCOUNT MANAGEMENT ROUTES (Added for Unlink/Refresh buttons)
+// ACCOUNT MANAGEMENT ROUTES
 app.post('/api/account/unlink', (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
-    req.session.robloxData = null; // Deletes the Roblox data from the session
+    req.session.robloxData = null;
     res.json({ ok: true });
 });
 
-app.post('/api/account/refresh', (req, res) => {
+app.post('/api/account/refresh', async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
     if (req.session.robloxData) {
-        // Update the timestamp when they click Refresh
+        try {
+            const thumbRes = await axios.get(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${req.session.robloxData.id}&size=150x150&format=Png&isCircular=true`);
+            if (thumbRes.data && thumbRes.data.data && thumbRes.data.data.length > 0) {
+                req.session.robloxData.avatarUrl = thumbRes.data.data[0].imageUrl;
+            }
+        } catch (err) {}
         req.session.robloxData.updatedAt = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     }
     res.json({ ok: true });
