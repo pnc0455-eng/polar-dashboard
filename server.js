@@ -179,6 +179,19 @@ app.get('/logout', (req, res, next) => {
     });
 });
 
+// ACCOUNT MANAGEMENT ROUTES (Added for Unlink/Refresh buttons)
+app.post('/api/account/unlink', (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
+    req.session.robloxData = null; // Deletes the Roblox data from the session
+    res.json({ ok: true });
+});
+
+app.post('/api/account/refresh', (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
+    // A placeholder to acknowledge the click and reload the page
+    res.json({ ok: true });
+});
+
 app.get('/:page', (req, res, next) => {
     if (!req.isAuthenticated()) return res.redirect('/');
     if (req.params.page.startsWith('auth')) return next();
