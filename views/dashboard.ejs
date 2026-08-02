@@ -1425,7 +1425,7 @@
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px">
       <% if (roblox) { %>
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-              <img src="https://judahcustoms.org/assets/Emojis/roblox.png" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--border2);object-fit:contain;padding:4px;background:var(--surface2)">
+              <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=<%= roblox.id %>&size=150x150&format=Png&isCircular=false" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--border2);object-fit:contain;padding:4px;background:var(--surface2)">
               <div style="min-width:0">
                 <div style="font-size:16px;font-weight:800"><%= roblox.displayName %></div>
                 <div style="font-size:12px;color:var(--muted2);margin-top:2px">@<%= roblox.username %></div>
@@ -1443,6 +1443,14 @@
             <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
               <span style="font-size:13px;color:var(--muted2)">Username</span>
               <span style="font-size:13px;font-weight:600">@<%= roblox.username %></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px;color:var(--muted2)">Verified on</span>
+              <span style="font-size:13px;font-weight:600"><%= roblox.verifiedAt || 'Just now' %></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px;color:var(--muted2)">Last updated</span>
+              <span style="font-size:13px;font-weight:600"><%= roblox.updatedAt || 'Just now' %></span>
             </div>
             <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
               <button onclick="refreshRoblox(this)" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(12,118,255,.25);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">
