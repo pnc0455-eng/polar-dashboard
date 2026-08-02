@@ -4,9 +4,26 @@ const passport = require('passport');
 const DiscordStrategy = require('passport-discord').Strategy;
 const axios = require('axios');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ---------- DATABASE SETUP ---------- //
+const DB_FILE = path.join(__dirname, 'database.json');
+
+function readDB() {
+    try {
+        if (fs.existsSync(DB_FILE)) return JSON.parse(fs.readFileSync(DB_FILE));
+    } catch (err) { console.error("DB Read Error:", err); }
+    return { users: {} };
+}
+
+function writeDB(data) {
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+    } catch (err) { console.error("DB Write Error:", err); }
+}
 
 // ---------- DISCORD SETTINGS ---------- //
 const DISCORD_CLIENT_ID = '1532988574583226538';
@@ -32,6 +49,17 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// ---------- LOAD SAVED ROBLOX DATA ---------- //
+app.use((req, res, next) => {
+    if (req.isAuthenticated() && !req.session.robloxData) {
+        const db = readDB();
+        if (db.users[req.user.profile.id] && db.users[req.user.profile.id].roblox) {
+            req.session.robloxData = db.users[req.user.profile.id].roblox;
+        }
+    }
+    next();
+});
+
 passport.use(new DiscordStrategy({
     clientID: DISCORD_CLIENT_ID,
     clientSecret: DISCORD_CLIENT_SECRET,
@@ -47,14 +75,31 @@ passport.deserializeUser((obj, done) => done(null, obj));
 // ---------- ROUTES ---------- //
 
 app.get('/', (req, res) => {
+    if (req.isAuthenticated()) return res.redirect('/dashboard');
+    res.redirect('/login');
+});
+
+app.get('/login', (req, res) => {
     res.render('login');
 });
 
 // DISCORD AUTH ROUTES
 app.get('/auth/discord', passport.authenticate('discord'));
+
 app.get('/auth/discord/callback', passport.authenticate('discord', {
-    failureRedirect: '/'
-}), (req, res) => res.redirect('/dashboard'));
+    failureRedirect: '/login'
+}), (req, res) => {
+    // Save last visit time to the database
+    const db = readDB();
+    const userId = req.user.profile.id;
+    if (!db.users[userId]) db.users[userId] = {};
+    
+    req.session.lastVisit = db.users[userId].lastVisit || Date.now();
+    db.users[userId].lastVisit = Date.now();
+    writeDB(db);
+
+    res.redirect('/dashboard');
+});
 
 // ROBLOX AUTH ROUTES
 app.get('/auth/roblox', (req, res) => {
@@ -65,7 +110,6 @@ app.get('/auth/roblox', (req, res) => {
 
 app.get('/auth/roblox/callback', async (req, res) => {
     const { code } = req.query;
-    
     const userProfile = req.user ? req.user.profile : null;
     const avatarUrl = userProfile ? `https://cdn.discordapp.com/avatars/${userProfile.id}/${userProfile.avatar}.png` : '';
 
@@ -92,17 +136,14 @@ app.get('/auth/roblox/callback', async (req, res) => {
         });
 
         const robloxId = userRes.data.sub;
-        let robloxAvatarUrl = 'https://judahcustoms.org/assets/Emojis/roblox.png'; // Fallback
+        let robloxAvatarUrl = 'https://judahcustoms.org/assets/Emojis/roblox.png';
         
-        // Safely fetch the actual image URL from Roblox's Thumbnail API
         try {
             const thumbRes = await axios.get(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${robloxId}&size=150x150&format=Png&isCircular=true`);
             if (thumbRes.data && thumbRes.data.data && thumbRes.data.data.length > 0) {
                 robloxAvatarUrl = thumbRes.data.data[0].imageUrl;
             }
-        } catch (err) {
-            console.log("Failed to fetch Roblox avatar", err.message);
-        }
+        } catch (err) {}
 
         const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -115,13 +156,18 @@ app.get('/auth/roblox/callback', async (req, res) => {
             updatedAt: formattedDate
         };
 
+        // Save to Database so it persists across logouts
+        const db = readDB();
+        if (!db.users[userProfile.id]) db.users[userProfile.id] = {};
+        db.users[userProfile.id].roblox = req.session.robloxData;
+        writeDB(db);
+
         res.render('status', {
             status: 'success', title: 'Account Linked', message: 'Your Roblox account has been successfully linked to your profile.',
             user: userProfile, avatarUrl: avatarUrl, roblox: req.session.robloxData
         });
         
     } catch (err) {
-        console.log("Roblox Auth Error:", err.response ? err.response.data : err.message);
         res.render('status', { 
             status: 'error', title: 'Link Expired', message: 'Your verification link expired (10 minutes). Please start again.', 
             user: userProfile, avatarUrl: avatarUrl, roblox: null 
@@ -131,7 +177,7 @@ app.get('/auth/roblox/callback', async (req, res) => {
 
 // DASHBOARD PAGE
 app.get('/dashboard', async (req, res) => {
-    if (!req.isAuthenticated()) return res.redirect('/');
+    if (!req.isAuthenticated()) return res.redirect('/login');
 
     const user = req.user.profile;
     const accessToken = req.user.accessToken;
@@ -143,23 +189,20 @@ app.get('/dashboard', async (req, res) => {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         joinedAt = new Date(guildMemberRes.data.joined_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-    } catch (err) {
-        console.log("Could not fetch Discord guild data");
-    }
+    } catch (err) {}
 
     res.render('dashboard', {
         user: user,
         avatarUrl: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
         roblox: robloxData,
         createdAt: new Date(Number((BigInt(user.id) >> 22n) + 1420070400000n)).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
-        joinedAt: joinedAt,
-        lastVisit: new Date().toLocaleTimeString()
+        joinedAt: joinedAt
     });
 });
 
 // INVENTORY PAGE
 app.get('/inventory', (req, res) => {
-    if (!req.isAuthenticated()) return res.redirect('/');
+    if (!req.isAuthenticated()) return res.redirect('/login');
     res.render('inventory', {
         user: req.user.profile,
         avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
@@ -168,6 +211,7 @@ app.get('/inventory', (req, res) => {
 });
 
 app.get('/verify', (req, res) => {
+    if (!req.isAuthenticated()) return res.redirect('/login');
     res.render('verify');
 });
 
@@ -175,13 +219,21 @@ app.get('/logout', (req, res, next) => {
     req.session.destroy();
     req.logout((err) => {
         if (err) return next(err);
-        res.redirect('/');
+        res.redirect('/login');
     });
 });
 
 // ACCOUNT MANAGEMENT ROUTES
 app.post('/api/account/unlink', (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
+    
+    // Remove from DB
+    const db = readDB();
+    if (db.users[req.user.profile.id]) {
+        delete db.users[req.user.profile.id].roblox;
+        writeDB(db);
+    }
+
     req.session.robloxData = null;
     res.json({ ok: true });
 });
@@ -196,12 +248,32 @@ app.post('/api/account/refresh', async (req, res) => {
             }
         } catch (err) {}
         req.session.robloxData.updatedAt = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        // Update DB
+        const db = readDB();
+        if (db.users[req.user.profile.id]) {
+            db.users[req.user.profile.id].roblox = req.session.robloxData;
+            writeDB(db);
+        }
     }
     res.json({ ok: true });
 });
 
+// API STUBS FOR FRONTEND UI SCRIPTS
+app.get('/api/dash/state', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ ok: false });
+    res.json({ ok: true, lastSeenAt: req.session.lastVisit });
+});
+app.get('/api/banner', (req, res) => res.json({ banners: [] }));
+app.get('/api/cart/count', (req, res) => res.json({ count: 0 }));
+app.get('/api/credits/balance', (req, res) => res.json({ balance: 0 }));
+app.get('/api/messages/unread-count', (req, res) => res.json({ count: 0 }));
+app.get('/api/achievements/unseen', (req, res) => res.json({ list: [] }));
+app.post('/api/log/click', (req, res) => res.json({ ok: true }));
+app.get('/api/session/heartbeat', (req, res) => res.json({ ok: true }));
+
 app.get('/:page', (req, res, next) => {
-    if (!req.isAuthenticated()) return res.redirect('/');
+    if (!req.isAuthenticated()) return res.redirect('/login');
     if (req.params.page.startsWith('auth')) return next();
     
     res.send(`
