@@ -96,10 +96,15 @@ app.get('/auth/roblox/callback', async (req, res) => {
             headers: { 'Authorization': `Bearer ${tokenRes.data.access_token}` }
         });
 
+        // Format the date exactly like "2 August 2026"
+        const formattedDate = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
         req.session.robloxData = {
             username: userRes.data.preferred_username,
             displayName: userRes.data.nickname || userRes.data.preferred_username,
-            id: userRes.data.sub
+            id: userRes.data.sub,
+            verifiedAt: formattedDate,
+            updatedAt: formattedDate
         };
 
         // Render the Success Page!
@@ -138,7 +143,7 @@ app.get('/dashboard', async (req, res) => {
         const guildMemberRes = await axios.get(`https://discord.com/api/users/@me/guilds/${YOUR_GUILD_ID}/member`, {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
-        joinedAt = new Date(guildMemberRes.data.joined_at).toLocaleDateString();
+        joinedAt = new Date(guildMemberRes.data.joined_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (err) {
         console.log("Could not fetch Discord guild data");
     }
@@ -147,7 +152,7 @@ app.get('/dashboard', async (req, res) => {
         user: user,
         avatarUrl: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
         roblox: robloxData,
-        createdAt: new Date(Number((BigInt(user.id) >> 22n) + 1420070400000n)).toLocaleDateString(),
+        createdAt: new Date(Number((BigInt(user.id) >> 22n) + 1420070400000n)).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
         joinedAt: joinedAt,
         lastVisit: new Date().toLocaleTimeString()
     });
@@ -188,7 +193,10 @@ app.post('/api/account/unlink', (req, res) => {
 
 app.post('/api/account/refresh', (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
-    // A placeholder to acknowledge the click and reload the page
+    if (req.session.robloxData) {
+        // Update the timestamp when they click Refresh
+        req.session.robloxData.updatedAt = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
     res.json({ ok: true });
 });
 
