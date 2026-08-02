@@ -307,6 +307,14 @@ app.post('/api/dash/tour-done', (req, res) => {
     res.json({ ok: true });
 });
 
+// E-COMMERCE / CART ENDPOINTS
+app.post('/api/cart/add', (req, res) => res.json({ ok: true, count: 1 }));
+app.post('/api/credits/custom', (req, res) => res.json({ ok: true, orderId: 'temp_order_123' }));
+app.post('/api/cart/increment', (req, res) => res.json({ ok: true, quantity: 2, lineTotal: 200, count: 2 }));
+app.post('/api/cart/decrement', (req, res) => res.json({ ok: true, quantity: 1, lineTotal: 100, count: 1 }));
+app.post('/api/cart/remove', (req, res) => res.json({ ok: true }));
+app.post('/api/checkout/start', (req, res) => res.json({ ok: true, orderId: 'temp_order_123' }));
+
 app.get('/api/banner', (req, res) => res.json({ banners: [] }));
 app.get('/api/cart/count', (req, res) => res.json({ count: 0 }));
 app.get('/api/credits/balance', (req, res) => res.json({ balance: 0 }));
