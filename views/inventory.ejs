@@ -1321,7 +1321,7 @@
 </script>
 
   <main class="dash-main">
-    <div class="rbx-gate-blur" aria-hidden="true">
+    <div class="<%= !roblox ? 'rbx-gate-blur' : '' %>" aria-hidden="true">
     <div class="dash-page-title">Inventory</div>
     <div class="dash-page-sub">0 items in your inventory.</div>
     <style>
@@ -1588,15 +1588,17 @@
       else dashToast(d.error||'Failed', false);
     }
   </script></div>
+    <% if (!roblox) { %>
     <div class="rbx-gate">
       <div class="rbx-gate-card">
         <div class="rbx-gate-ic"><img src="https://judahcustoms.org/assets/Emojis/link.png" style="width:32px;height:32px;object-fit:contain" alt=""></div>
         <div class="rbx-gate-title">Link your Roblox account first</div>
         <div class="rbx-gate-sub">The dashboard needs a verified Roblox account before you can use it. It takes less than a minute.</div>
-        <a class="rbx-gate-btn" href="https://blox.link">Please link a Roblox account first →</a>
+        <a class="rbx-gate-btn" href="/auth/roblox">Please link a Roblox account first →</a>
         <a class="rbx-gate-alt" href="/dashboard">View your account page instead</a>
       </div>
     </div>
+    <% } %>
   </main>
   <style>
     #siteBanner{position:fixed;top:var(--topbar-h);left:var(--sidebar-w);right:0;z-index:49;transition:left .22s ease,right .22s ease}
