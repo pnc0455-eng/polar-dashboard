@@ -218,7 +218,14 @@ app.get('/verify', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/login');
     res.render('verify');
 });
-
+app.get('/credits', (req, res) => {
+    if (!req.isAuthenticated()) return res.redirect('/login');
+    res.render('credits', {
+        user: req.user.profile,
+        avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
+        roblox: req.session.robloxData || null
+    });
+});
 app.get('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) return next(err);
