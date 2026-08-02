@@ -95,7 +95,6 @@
   a{color:inherit;text-decoration:none}
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-  /* ── Topbar ── */
   .topbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topbar-h);background:rgba(6,6,15,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;z-index:50;transition:left .22s ease}
   .sb-toggle{display:flex;align-items:center;justify-content:center;width:34px;height:34px;margin-left:-6px;border:1px solid var(--border2);background:transparent;color:var(--muted2);border-radius:9px;cursor:pointer;flex-shrink:0;transition:all .15s}
   .sb-toggle:hover{color:var(--text);border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04)}
@@ -129,7 +128,6 @@
   .topbar-cart img{width:17px;height:17px;object-fit:contain;flex-shrink:0}
   .topbar-cart-label{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap}
 
-  /* ── Sidebar ── */
   .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:60;overflow-y:auto}
   .sidebar-brand{display:flex;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--border);text-decoration:none;flex-shrink:0}
   .sidebar-brand img{width:26px;height:26px;object-fit:contain}
@@ -146,14 +144,13 @@
   @media (prefers-reduced-motion: reduce){.sidebar-unread-dot{animation:none}}
   .sidebar-item.active svg{opacity:1}
 
-  /* ── Main content ── */
   .dash-main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);flex:1;padding:32px 36px;min-height:calc(100vh - var(--topbar-h));animation:pageIn .26s ease both;transition:margin-left .22s ease}
   @keyframes pageIn{from{opacity:0}to{opacity:1}}
   body.pg-leaving .dash-main{opacity:0;transition:opacity .16s ease}
   @media(prefers-reduced-motion:reduce){.dash-main{animation:none}body.pg-leaving .dash-main{transition:none}}
   .dash-page-title{font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
   .dash-page-sub{font-size:13px;color:var(--muted2);margin-bottom:28px}
-  
+
   html.layout-right .sidebar{left:auto;right:0;border-right:none;border-left:1px solid var(--border)}
   html.layout-right .topbar{left:0;right:var(--sidebar-w)}
   html.layout-right .dash-main{margin-left:0;margin-right:var(--sidebar-w)}
@@ -198,7 +195,6 @@
   ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.22)}
   * { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.12) transparent }
 
-  /* ── Custom Select / Dates / Ambient ── */
   .jcdd{position:relative;display:inline-block;vertical-align:middle;max-width:100%}
   .jcdd-trigger{display:flex!important;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;text-align:left;font-family:inherit}
   .jcdd-trigger>svg{flex-shrink:0;color:var(--muted);transition:transform .15s}
@@ -226,7 +222,6 @@
   .fx-off #jcAmbient,.fx-off #jcSpot,.fx-off #jcGrain{display:none}
   @media(prefers-reduced-motion:reduce){.jc-glow{animation:none}#jcSpot{display:none}}
   #jcProg{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--accent),#7c3aed);z-index:12000;opacity:0;transition:width .4s ease,opacity .3s ease;box-shadow:0 0 8px var(--accent)}
-
 </style>
 </head>
 <body>
@@ -246,7 +241,7 @@
     </button>
     <span class="topbar-title">Credits</span>
     <div class="topbar-right">
-      <a href="/credits" class="topbar-cart" title="Credits" aria-label="Credits">
+      <a href="/credits" class="topbar-cart active" title="Credits" aria-label="Credits">
         <img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:15px;height:15px;object-fit:contain" alt="">
         <span class="topbar-cart-label" id="topbarCreditsBal">0</span>
       </a>
@@ -337,7 +332,6 @@
       }).catch(function(){});
     }
     
-    // UPDATED refreshCredits: Now it also updates the big number on the Credits page!
     window.refreshCredits = function(){
       if (!creditsLabel) return;
       fetch('/api/credits/balance').then(function(r){ return r.json(); }).then(function(d){
@@ -998,7 +992,8 @@
       if (reduced) return done();
       var sp = document.createElement('div');
       sp.className = 'jc-splash';
-      sp.innerHTML = '<div class="jc-splash-t">Polar Follow</div>'
+      sp.innerHTML = '<div class="jc-splash-logo"><img src="https://judahcustoms.org/logo.png" alt=""></div>'
+        + '<div class="jc-splash-t">Polar Follow</div>'
         + '<div class="jc-splash-s">Welcome to your dashboard — click to skip</div>';
       document.body.appendChild(sp);
       var finished = false;
@@ -1129,6 +1124,7 @@
       if (logoLayer) return;
       logoLayer = document.createElement('div');
       logoLayer.className = 'jc-logo-reveal';
+      logoLayer.innerHTML = '<img src="https://judahcustoms.org/logo.png" alt="">';
       document.body.appendChild(logoLayer);
     }
     function removeLogoLayer(){ if (logoLayer) { logoLayer.remove(); logoLayer = null; } }
@@ -1150,6 +1146,7 @@
       if (dvdEl) return;
       dvdEl = document.createElement('div');
       dvdEl.className = 'jc-dvd';
+      dvdEl.innerHTML = '<img src="https://judahcustoms.org/logo.png" alt="">';
       document.body.appendChild(dvdEl);
       var img = dvdEl.firstChild;
       var x = Math.random() * Math.max(1, window.innerWidth - 140);
@@ -1256,63 +1253,77 @@
     .cr-btn-add{padding:9px 10px;border-radius:9px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
     .cr-custom-in{width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;text-align:center;box-sizing:border-box}
   </style>
-      <div class="cr-wrap">
-        <div class="cr-balance">
-          <div class="cr-balance-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-          <div>
-            <div class="cr-balance-num" id="mainCreditsBal">0</div>
-            <div class="cr-balance-label">Your credit balance</div>
+  
+      <% if (!roblox) { %>
+        <div class="rbx-gate">
+          <div class="rbx-gate-card">
+            <div class="rbx-gate-ic"><img src="https://judahcustoms.org/assets/Emojis/lock.png" style="width:48px;height:48px;object-fit:contain" alt=""></div>
+            <div class="rbx-gate-title">Roblox Account Required</div>
+            <div class="rbx-gate-sub">Please link your Roblox account to purchase credits.</div>
+            <a href="/verify" class="rbx-gate-btn">Link Roblox Account</a>
           </div>
         </div>
-        <div class="cr-grid"><div class="cr-card">
-    <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-    <div class="cr-card-amt">100</div>
-    <div class="cr-card-label">Credits</div>
-    <div class="cr-card-price">100 R$</div>
-    <div class="cr-card-btns">
-      <button class="cr-btn-add" onclick="crBuy('cr-100',this)">Add to Cart</button>
-    </div>
-  </div><div class="cr-card">
-    <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-    <div class="cr-card-amt">500</div>
-    <div class="cr-card-label">Credits</div>
-    <div class="cr-card-price">500 R$</div>
-    <div class="cr-card-btns">
-      <button class="cr-btn-add" onclick="crBuy('cr-500',this)">Add to Cart</button>
-    </div>
-  </div><div class="cr-card">
-    <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-    <div class="cr-card-amt">1,000</div>
-    <div class="cr-card-label">Credits</div>
-    <div class="cr-card-price">1,000 R$</div>
-    <div class="cr-card-btns">
-      <button class="cr-btn-add" onclick="crBuy('cr-1000',this)">Add to Cart</button>
-    </div>
-  </div><div class="cr-card">
-    <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-    <div class="cr-card-amt">2,500</div>
-    <div class="cr-card-label">Credits</div>
-    <div class="cr-card-price">2,500 R$</div>
-    <div class="cr-card-btns">
-      <button class="cr-btn-add" onclick="crBuy('cr-2500',this)">Add to Cart</button>
-    </div>
-  </div><div class="cr-card">
-    <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-    <div class="cr-card-amt">5,000</div>
-    <div class="cr-card-label">Credits</div>
-    <div class="cr-card-price">5,000 R$</div>
-    <div class="cr-card-btns">
-      <button class="cr-btn-add" onclick="crBuy('cr-5000',this)">Add to Cart</button>
-    </div>
-  </div><div class="cr-card">
-    <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-    <div class="cr-card-label">Custom Amount</div>
-    <div class="cr-card-price" style="margin-bottom:10px">1 Credit = 1 R$</div>
-    <div class="cr-card-btns">
-      <input type="number" min="5" id="crCustomAmt" placeholder="R$" class="cr-custom-in">
-      <button class="cr-btn-add" onclick="crCustomBuy(this)">Buy Credits</button>
-    </div>
-  </div></div>
+      <% } %>
+
+      <div class="<%= !roblox ? 'rbx-gate-blur' : '' %>">
+        <div class="cr-wrap">
+          <div class="cr-balance">
+            <div class="cr-balance-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+            <div>
+              <div class="cr-balance-num" id="mainCreditsBal">0</div>
+              <div class="cr-balance-label">Your credit balance</div>
+            </div>
+          </div>
+          <div class="cr-grid"><div class="cr-card">
+      <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+      <div class="cr-card-amt">100</div>
+      <div class="cr-card-label">Credits</div>
+      <div class="cr-card-price">100 R$</div>
+      <div class="cr-card-btns">
+        <button class="cr-btn-add" onclick="crBuy('cr-100',this)">Add to Cart</button>
+      </div>
+    </div><div class="cr-card">
+      <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+      <div class="cr-card-amt">500</div>
+      <div class="cr-card-label">Credits</div>
+      <div class="cr-card-price">500 R$</div>
+      <div class="cr-card-btns">
+        <button class="cr-btn-add" onclick="crBuy('cr-500',this)">Add to Cart</button>
+      </div>
+    </div><div class="cr-card">
+      <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+      <div class="cr-card-amt">1,000</div>
+      <div class="cr-card-label">Credits</div>
+      <div class="cr-card-price">1,000 R$</div>
+      <div class="cr-card-btns">
+        <button class="cr-btn-add" onclick="crBuy('cr-1000',this)">Add to Cart</button>
+      </div>
+    </div><div class="cr-card">
+      <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+      <div class="cr-card-amt">2,500</div>
+      <div class="cr-card-label">Credits</div>
+      <div class="cr-card-price">2,500 R$</div>
+      <div class="cr-card-btns">
+        <button class="cr-btn-add" onclick="crBuy('cr-2500',this)">Add to Cart</button>
+      </div>
+    </div><div class="cr-card">
+      <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+      <div class="cr-card-amt">5,000</div>
+      <div class="cr-card-label">Credits</div>
+      <div class="cr-card-price">5,000 R$</div>
+      <div class="cr-card-btns">
+        <button class="cr-btn-add" onclick="crBuy('cr-5000',this)">Add to Cart</button>
+      </div>
+    </div><div class="cr-card">
+      <div class="cr-card-icon"><img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
+      <div class="cr-card-label">Custom Amount</div>
+      <div class="cr-card-price" style="margin-bottom:10px">1 Credit = 1 R$</div>
+      <div class="cr-card-btns">
+        <input type="number" min="5" id="crCustomAmt" placeholder="R$" class="cr-custom-in">
+        <button class="cr-btn-add" onclick="crCustomBuy(this)">Buy Credits</button>
+      </div>
+    </div></div>
+        </div>
       </div>
       <script>
         async function crBuy(packId, btn){
