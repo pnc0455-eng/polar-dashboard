@@ -1425,7 +1425,7 @@
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px">
       <% if (roblox) { %>
             <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-              <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=<%= roblox.id %>&size=150x150&format=Png&isCircular=false" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--border2);object-fit:contain;padding:4px;background:var(--surface2)">
+              <img src="<%= roblox.avatarUrl %>" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--border2);object-fit:cover;">
               <div style="min-width:0">
                 <div style="font-size:16px;font-weight:800"><%= roblox.displayName %></div>
                 <div style="font-size:12px;color:var(--muted2);margin-top:2px">@<%= roblox.username %></div>
