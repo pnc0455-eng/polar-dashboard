@@ -233,10 +233,22 @@ app.get('/credits', (req, res) => {
 // CART PAGE
 app.get('/cart', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/login');
+    
+    // Load the user's cart from the database
+    const db = readDB();
+    const userId = req.user.profile.id;
+    let cart = [];
+    if (db.users[userId] && db.users[userId].cart) {
+        cart = db.users[userId].cart;
+    }
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
     res.render('cart', {
         user: req.user.profile,
         avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
-        roblox: req.session.robloxData || null
+        roblox: req.session.robloxData || null,
+        cartItems: cart,
+        cartTotal: total
     });
 });
 
@@ -253,14 +265,11 @@ app.get('/logout', (req, res, next) => {
 // ACCOUNT MANAGEMENT ROUTES
 app.post('/api/account/unlink', (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
-    
-    // Remove from DB
     const db = readDB();
     if (db.users[req.user.profile.id]) {
         delete db.users[req.user.profile.id].roblox;
         writeDB(db);
     }
-
     req.session.robloxData = null;
     res.json({ ok: true });
 });
@@ -275,8 +284,6 @@ app.post('/api/account/refresh', async (req, res) => {
             }
         } catch (err) {}
         req.session.robloxData.updatedAt = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-        
-        // Update DB
         const db = readDB();
         if (db.users[req.user.profile.id]) {
             db.users[req.user.profile.id].roblox = req.session.robloxData;
@@ -307,16 +314,86 @@ app.post('/api/dash/tour-done', (req, res) => {
     res.json({ ok: true });
 });
 
-// E-COMMERCE / CART ENDPOINTS
-app.post('/api/cart/add', (req, res) => res.json({ ok: true, count: 1 }));
+// REAL E-COMMERCE / CART ENDPOINTS
+app.post('/api/cart/add', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ ok: false, error: "Unauthorized" });
+    const { productType, productId } = req.body;
+    
+    const db = readDB();
+    const userId = req.user.profile.id;
+    if (!db.users[userId]) db.users[userId] = {};
+    if (!db.users[userId].cart) db.users[userId].cart = [];
+    
+    let existingItem = db.users[userId].cart.find(i => i.id === productId);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        let price = parseInt(productId.replace('cr-', ''), 10) || 0;
+        db.users[userId].cart.push({
+            id: productId,
+            type: productType,
+            title: price + " Credits",
+            price: price,
+            quantity: 1,
+            image: "https://judahcustoms.org/assets/Emojis/robux.png"
+        });
+    }
+    writeDB(db);
+    
+    const count = db.users[userId].cart.reduce((sum, item) => sum + item.quantity, 0);
+    res.json({ ok: true, count });
+});
+
+app.get('/api/cart/count', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ count: 0 });
+    const db = readDB();
+    const cart = db.users[req.user.profile.id]?.cart || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    res.json({ count });
+});
+
+app.post('/api/cart/increment', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ ok: false });
+    const db = readDB();
+    const cart = db.users[req.user.profile.id]?.cart || [];
+    let item = cart.find(i => i.id === req.body.productId);
+    if (item) item.quantity += 1;
+    writeDB(db);
+    res.json({ ok: true, quantity: item.quantity, lineTotal: item.price * item.quantity, count: cart.reduce((s, i) => s + i.quantity, 0) });
+});
+
+app.post('/api/cart/decrement', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ ok: false });
+    const db = readDB();
+    let cart = db.users[req.user.profile.id]?.cart || [];
+    let item = cart.find(i => i.id === req.body.productId);
+    let removed = false;
+    if (item) {
+        item.quantity -= 1;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.id !== req.body.productId);
+            db.users[req.user.profile.id].cart = cart;
+            removed = true;
+        }
+    }
+    writeDB(db);
+    res.json({ ok: true, removed, quantity: item ? item.quantity : 0, lineTotal: item ? item.price * item.quantity : 0, count: cart.reduce((s, i) => s + i.quantity, 0) });
+});
+
+app.post('/api/cart/remove', (req, res) => {
+    if (!req.isAuthenticated()) return res.json({ ok: false });
+    const db = readDB();
+    if (db.users[req.user.profile.id]) {
+        db.users[req.user.profile.id].cart = (db.users[req.user.profile.id].cart || []).filter(i => i.id !== req.body.productId);
+        writeDB(db);
+    }
+    res.json({ ok: true });
+});
+
 app.post('/api/credits/custom', (req, res) => res.json({ ok: true, orderId: 'temp_order_123' }));
-app.post('/api/cart/increment', (req, res) => res.json({ ok: true, quantity: 2, lineTotal: 200, count: 2 }));
-app.post('/api/cart/decrement', (req, res) => res.json({ ok: true, quantity: 1, lineTotal: 100, count: 1 }));
-app.post('/api/cart/remove', (req, res) => res.json({ ok: true }));
 app.post('/api/checkout/start', (req, res) => res.json({ ok: true, orderId: 'temp_order_123' }));
 
 app.get('/api/banner', (req, res) => res.json({ banners: [] }));
-app.get('/api/cart/count', (req, res) => res.json({ count: 0 }));
 app.get('/api/credits/balance', (req, res) => res.json({ balance: 0 }));
 app.get('/api/messages/unread-count', (req, res) => res.json({ count: 0 }));
 app.get('/api/achievements/unseen', (req, res) => res.json({ list: [] }));
