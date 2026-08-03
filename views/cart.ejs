@@ -1319,6 +1319,7 @@
           <% } %>
         </div>
       </div>
+        <script>
         function ctRecalcTotal(){
           var sum = 0;
           document.querySelectorAll('.ct-line-price').forEach(function(el){ sum += parseInt(el.textContent, 10) || 0; });
@@ -1347,13 +1348,6 @@
           var label = document.getElementById('topbarCartLabel');
           if (label && d.count) { label.textContent = d.count + ' item' + (d.count !== 1 ? 's' : ''); label.style.display = 'inline'; }
         }
-        async function ctCancelLocked(orderId, btn){
-          btn.disabled = true; btn.textContent = 'Cancelling…';
-          var r = await fetch('/api/checkout/' + orderId + '/cancel', { method:'POST' });
-          var d = await r.json().catch(function(){ return {}; });
-          if (d.ok) { location.reload(); }
-          else { btn.disabled = false; btn.textContent = 'Cancel checkout'; dashToast(d.error || 'Failed to cancel checkout', false); }
-        }
         async function ctRemove(btn){
           var row = btn.closest('.ct-row');
           var r = await fetch('/api/cart/remove', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ productType: row.dataset.type, productId: row.dataset.id }) });
@@ -1369,6 +1363,8 @@
         }
       </script>
   </main>
+</body>
+</html>
   <style>
     #siteBanner{position:fixed;top:var(--topbar-h);left:var(--sidebar-w);right:0;z-index:49;transition:left .22s ease,right .22s ease}
     html.layout-right #siteBanner{left:0;right:var(--sidebar-w)}
