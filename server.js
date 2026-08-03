@@ -393,6 +393,17 @@ app.post('/api/cart/remove', (req, res) => {
 app.post('/api/credits/custom', (req, res) => res.json({ ok: true, orderId: 'temp_order_123' }));
 app.post('/api/checkout/start', (req, res) => res.json({ ok: true, orderId: 'temp_order_123' }));
 
+// SERVE THE CHECKOUT PAGE
+app.get('/checkout/:orderId', (req, res) => {
+    if (!req.isAuthenticated()) return res.redirect('/login');
+    
+    res.render('checkout', {
+        user: req.user.profile,
+        avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
+        roblox: req.session.robloxData || null
+    });
+});
+
 app.get('/api/banner', (req, res) => res.json({ banners: [] }));
 app.get('/api/credits/balance', (req, res) => res.json({ balance: 0 }));
 app.get('/api/messages/unread-count', (req, res) => res.json({ count: 0 }));
