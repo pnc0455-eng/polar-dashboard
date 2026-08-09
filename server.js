@@ -214,6 +214,26 @@ app.get('/inventory', (req, res) => {
     });
 });
 
+// STORAGE PAGE
+app.get('/storage', (req, res) => {
+    if (!req.isAuthenticated()) return res.redirect('/login');
+    res.render('storage', {
+        user: req.user.profile,
+        avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
+        roblox: req.session.robloxData || null
+    });
+});
+
+// ACHIEVEMENTS PAGE
+app.get('/achievements', (req, res) => {
+    if (!req.isAuthenticated()) return res.redirect('/login');
+    res.render('achievements', {
+        user: req.user.profile,
+        avatarUrl: `https://cdn.discordapp.com/avatars/${req.user.profile.id}/${req.user.profile.avatar}.png`,
+        roblox: req.session.robloxData || null
+    });
+});
+
 // VERIFY PAGE
 app.get('/verify', (req, res) => {
     if (!req.isAuthenticated()) return res.redirect('/login');
@@ -421,7 +441,7 @@ app.get('/:page', (req, res, next) => {
             <h1 style="color: #00FF00;">Coming Soon</h1>
             <p>The /${req.params.page} page is currently under construction.</p>
             <br><br>
-            <a href="/dashboard" style="color: #bb86fc; text-decoration: none; font-weight: bold; background: #111d33; padding: 10px 20px; border-radius: 8px;">← Go back to Dashboard</a>
+            <a href="/dashboard" style="color: #00FF00; text-decoration: none; font-weight: bold; background: #111d33; padding: 10px 20px; border-radius: 8px;">← Go back to Dashboard</a>
         </body>
     `);
 });
