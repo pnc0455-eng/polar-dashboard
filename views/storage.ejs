@@ -452,7 +452,7 @@
     .jc-dvd img { position: absolute; left: 0; top: 0; width: 130px; will-change: transform; }
   </style>
 </head>
-<body data-page="inventory">
+<body data-page="storage">
   <aside class="sidebar">
     <a class="sidebar-brand" href="/dashboard">
       <img src="/logo.png" alt="Polar Follow">
@@ -464,8 +464,8 @@
     <nav class="sidebar-nav">
       <div class="sidebar-cat">Personal</div>
       <a href="/dashboard" class="sidebar-item" title="Account"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> Account</a>
-      <a href="/inventory" class="sidebar-item active" title="Inventory"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg> Inventory</a>
-      <a href="/storage" class="sidebar-item" title="Storage"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg> Storage</a>
+      <a href="/inventory" class="sidebar-item" title="Inventory"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg> Inventory</a>
+      <a href="/storage" class="sidebar-item active" title="Storage"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg> Storage</a>
       <a href="/achievements" class="sidebar-item" title="Achievements"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 0 12 0V4H6z"/><path d="M6 4H3v2a4 4 0 0 0 4 4"/><path d="M18 4h3v2a4 4 0 0 1-4 4"/><line x1="12" y1="15" x2="12" y2="18"/><path d="M8 21h8"/><path d="M10 18h4v3h-4z"/></svg> Achievements</a>
       <a href="/weekly-stats" class="sidebar-item" title="Statistics"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Statistics</a>
       <a href="/messages" class="sidebar-item" title="Messages"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg> Messages</a>
@@ -494,7 +494,7 @@
     <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()" title="Toggle sidebar" aria-label="Toggle sidebar">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <span class="topbar-title">Inventory</span>
+    <span class="topbar-title">Storage</span>
     <div class="topbar-right">
       <a href="/credits" class="topbar-cart" title="Credits" aria-label="Credits">
         <img src="https://judahcustoms.org/assets/Emojis/robux.png" style="width:15px;height:15px;object-fit:contain" alt="">
@@ -1489,292 +1489,46 @@
   </script>
 
   <main class="dash-main">
-    <div class="<%= !roblox ? 'rbx-gate-blur' : '' %>" aria-hidden="true">
-      <div class="dash-page-title">Inventory</div>
-      <div class="dash-page-sub">0 items in your inventory.</div>
-      <style>
-        .inv-tabs{display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:24px;width:fit-content}
-        .inv-tab{padding:9px 22px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:var(--muted2);border-radius:8px;transition:color .2s,background .2s;display:flex;align-items:center;gap:8px}
-        .inv-tab:hover{color:var(--text)}
-        .inv-tab.active{color:#fff;background:var(--accent)}
-        .inv-tab .cnt{font-size:11px;font-weight:800;padding:1px 7px;border-radius:99px;background:rgba(255,255,255,.15)}
-        .inv-tab:not(.active) .cnt{background:var(--border2);color:var(--muted2)}
-        .inv-pane{display:none;animation:invIn .35s ease both}
-        .inv-pane.active{display:block}
-        @keyframes invIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-        .inv-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-        .inv-filter{padding:6px 15px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:inherit;transition:all .15s}
-        .inv-filter:hover{border-color:var(--accent);color:var(--text)}
-        .inv-filter.active{background:var(--accent);border-color:var(--accent);color:#fff}
-        .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-        .inv-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;transition:border-color .15s,transform .15s}
-        .inv-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-        .inv-card.hidden{display:none}
-        .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-        .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s,transform .15s}
-        .hist-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-        .hist-card.hidden{display:none}
-        .inv-empty{text-align:center;padding:64px;color:var(--muted2)}
-        .inv-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px}
-        .inv-modal-overlay.show{display:flex}
-        .inv-modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:440px;width:100%}
-        .inv-modal-in{width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:13px;font-family:inherit;margin-bottom:10px}
-        .inv-modal-lbl{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px}
-        .inv-file-wrap{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;padding:8px 12px;border-radius:9px;border:1px dashed var(--border2);background:var(--surface2);margin-bottom:10px;transition:border-color .15s}
-        .inv-file-wrap:hover{border-color:var(--accent)}
-        .inv-file-btn{flex-shrink:0;padding:6px 14px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
-        .inv-file-name{flex:1;min-width:0;font-size:12.5px;color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .inv-file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-      </style>
-      
-      <div class="inv-modal-overlay" id="invModalOverlay" onclick="if(event.target===this)invModalClose()"><div class="inv-modal" id="invModal"></div></div>
-      <div class="inv-tabs">
-        <button class="inv-tab active" data-tab="items" onclick="invTab('items')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-          Items <span class="cnt">0</span>
-        </button>
-        <button class="inv-tab" data-tab="history" onclick="invTab('history')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-          History <span class="cnt">0</span>
-        </button>
-      </div>
-      <div class="inv-pane active" data-pane="items">
-        <div class="inv-empty">
-          <div style="margin-bottom:14px"><img src="https://judahcustoms.org/assets/Emojis/package.png" style="width:40px;height:40px;object-fit:contain" alt=""></div>
-          <div style="font-weight:700;font-size:16px;margin-bottom:6px">No items yet</div>
-          <div style="font-size:13px">Items you purchase or receive will appear here.</div>
-        </div>
-      </div>
-      <div class="inv-pane" data-pane="history">
-        <div class="inv-empty">
-          <div style="font-size:40px;margin-bottom:14px"><img src="https://judahcustoms.org/assets/Emojis/clipboard.png" style="width:1.1em;height:1.1em;object-fit:contain;vertical-align:-.18em" alt=""></div>
-          <div style="font-weight:700;font-size:16px;margin-bottom:6px">No history yet</div>
-          <div style="font-size:13px">Activity on your inventory will appear here.</div>
-        </div>
-      </div>
-      
-      <script>
-      function invTab(which){
-        document.querySelectorAll('.inv-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===which));
-        document.querySelectorAll('.inv-pane').forEach(p=>p.classList.toggle('active',p.dataset.pane===which));
+    <div class="dash-page-title">Storage</div>
+    <div class="dash-page-sub">Re-download the finished work from any order you have placed.</div>
+    <style>
+      .st-wrap{max-width:840px;margin:0 auto}
+      .st-head{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+      .st-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;min-width:120px}
+      .st-stat-v{font-size:22px;font-weight:900;line-height:1}
+      .st-stat-l{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.05em}
+      .st-note{font-size:12.5px;color:var(--muted2);line-height:1.6;margin-bottom:20px;max-width:64ch}
+      .st-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+      .st-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+      .st-svc{font-size:15px;font-weight:800}
+      .st-id{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+      .st-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:12px;color:var(--muted2)}
+      .st-dl{
+        margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;
+        background:var(--accent);color:#fff;font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap
       }
-      function filterInv(cat,btn){
-        document.querySelectorAll('#invFilters .inv-filter').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.inv-card').forEach(c=>c.classList.toggle('hidden',cat!=='all'&&c.dataset.cat!==cat));
+      .st-dl:hover{opacity:.9}
+      .st-files{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px}
+      .st-file{
+        font-size:11.5px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);
+        border-radius:7px;padding:3px 9px;font-family:ui-monospace,monospace
       }
-      function filterHist(action,btn){
-        document.querySelectorAll('#histFilters .inv-filter').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.hist-card').forEach(r=>r.classList.toggle('hidden',action!=='all'&&r.dataset.action!==action));
-      }
-      var invActiveId = null;
-      var invSpgwActiveKind = null;
-      function invModalOpen(html){ document.getElementById('invModal').innerHTML=html; document.getElementById('invModalOverlay').classList.add('show'); }
-      function invModalClose(){ document.getElementById('invModalOverlay').classList.remove('show'); document.getElementById('invModal').innerHTML=''; invActiveId=null; }
-
-      var invGiftTargetId = null;
-      function invGiftOpen(id){
-        invActiveId = id;
-        invGiftTargetId = null;
-        var html = '';
-        html += '<div style="font-size:15px;font-weight:800;margin-bottom:14px">Gift this item</div>';
-        html += '<label class="inv-modal-lbl">Recipient\'s Discord user ID</label>';
-        html += '<input id="invGiftId" class="inv-modal-in" placeholder="Discord user ID" autocomplete="off">';
-        html += '<div id="invGiftResult" style="display:none;align-items:center;gap:10px;margin:0 0 10px;padding:10px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2)">';
-        html += '<img id="invGiftAv" style="width:32px;height:32px;border-radius:50%;object-fit:cover" alt="">';
-        html += '<span style="font-size:13px">Gift to <b id="invGiftName"></b>?</span>';
-        html += '</div>';
-        html += '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">';
-        html += '<button onclick="invModalClose()" style="padding:9px 16px;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Cancel</button>';
-        html += '<button id="invGiftActionBtn" onclick="invGiftAction()" style="padding:9px 18px;border-radius:9px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Verify</button>';
-        html += '</div>';
-        invModalOpen(html);
-      }
-      async function invGiftAction(){
-        var btn = document.getElementById('invGiftActionBtn');
-        if(invGiftTargetId){
-          btn.disabled = true;
-          var r = await fetch('/api/inventory/'+invActiveId+'/gift', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ targetId: invGiftTargetId }) });
-          var d = await r.json().catch(function(){return {};});
-          if(r.ok&&d.ok){ invModalClose(); dashToast(d.message||'Gifted!'); setTimeout(function(){location.reload();},600); }
-          else { btn.disabled = false; dashToast(d.error||'Failed', false); }
-          return;
-        }
-        var targetId = document.getElementById('invGiftId').value.trim();
-        if(!/^\d{15,20}$/.test(targetId)){ dashToast('Enter a valid Discord user ID.', false); return; }
-        btn.disabled = true;
-        var r = await fetch('/api/inventory/'+invActiveId+'/gift-check?id='+encodeURIComponent(targetId));
-        var d = await r.json().catch(function(){return {};});
-        btn.disabled = false;
-        if(!r.ok||!d.ok){ dashToast(d.error||'Could not find that user.', false); return; }
-        invGiftTargetId = targetId;
-        document.getElementById('invGiftAv').src = d.avatarUrl || '';
-        document.getElementById('invGiftName').textContent = '@'+d.username;
-        document.getElementById('invGiftResult').style.display = 'flex';
-        btn.textContent = 'Confirm Gift';
-      }
-
-      async function invRedeem(id, btn){
-        btn.disabled=true;
-        var r = await fetch('/api/inventory/'+id+'/redeem',{method:'POST'});
-        var d = await r.json().catch(function(){return {};});
-        if(r.ok&&d.ok){ dashToast(d.message||'Redeemed!'); setTimeout(function(){location.reload();},600); return; }
-        btn.disabled=false;
-        if(d.needsForm==='website_ad'||d.needsForm==='banner_ad'){ invAdFormOpen(id, d.needsForm); return; }
-        if(d.needsForm){ invSpgwFormOpen(id, d.needsForm); return; }
-        if(d.needsUpgrade){ invUpgradeConfirm(id, d.needsUpgrade); return; }
-        dashToast(d.error||'Failed', false);
-      }
-
-      function invSpgwFormOpen(id, kind){
-        invActiveId = id;
-        invSpgwActiveKind = kind;
-        var title = kind==='paid_channel' ? 'Paid Channel' : kind==='paid_ad' ? 'Paid Advertisement' : 'Sponsored Giveaway';
-        var isPaidAd = kind === 'paid_ad';
-        var html = '';
-        html += '<div style="font-size:15px;font-weight:800;margin-bottom:14px">'+title+' submission</div>';
-        if(kind==='paid_channel'){
-          html += '<label class="inv-modal-lbl">What goes in your channel?</label>';
-          html += '<select id="invSpgwType" class="inv-modal-in" onchange="invSpgwToggleType()" style="margin-bottom:6px">';
-          html += '<option value="paid_ad" selected>Paid Advertisement</option>';
-          html += '<option value="giveaway">Sponsored Giveaway</option>';
-          html += '<option value="ping">Just a Ping (you post your own content)</option>';
-          html += '</select>';
-          html += '<div style="font-size:11.5px;color:var(--muted);margin:0 0 12px">This cannot be changed once submitted — staff approval is needed to change it later.</div>';
-        }
-        html += '<label class="inv-modal-lbl">Server name</label>';
-        html += '<input id="invSpgwServer" class="inv-modal-in" placeholder="Server name">';
-        html += '<div id="invSpgwContentFields">';
-        html += '<label class="inv-modal-lbl" id="invSpgwPrizeLbl">'+(isPaidAd ? 'Server description (text or JSON)' : 'Prize')+'</label>';
-        html += '<textarea id="invSpgwPrize" class="inv-modal-in" rows="'+(isPaidAd ? 6 : 2)+'" style="resize:vertical;font-family:'+(isPaidAd ? 'ui-monospace,monospace' : 'inherit')+'" placeholder="'+(isPaidAd ? 'Write your ad as plain text, or paste exported JSON' : '500 robux')+'"></textarea>';
-        html += '<div id="invSpgwPrizeHint" style="font-size:11.5px;color:var(--muted);margin:-6px 0 12px;display:'+(isPaidAd ? '' : 'none')+'">Either write plain text, or paste a full message export as JSON — from <a href="https://discohook.app" target="_blank" rel="noopener" style="color:var(--accent)">discohook.app</a> (Share → Export as JSON), or a raw Components v2 payload. JSON is posted to the channel as-is, with a Join Server button added.</div>';
-        html += '<label class="inv-modal-lbl">Permanent invite</label>';
-        html += '<input id="invSpgwInvite" class="inv-modal-in" value="https://discord.gg/">';
-        html += '<label class="inv-modal-lbl">Additional info (optional)</label>';
-        html += '<textarea id="invSpgwInfo" class="inv-modal-in" rows="3" style="resize:vertical"></textarea>';
-        html += '</div>';
-        html += '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">';
-        html += '<button onclick="invModalClose()" style="padding:9px 16px;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Cancel</button>';
-        html += '<button onclick="invSpgwSubmit()" style="padding:9px 18px;border-radius:9px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Submit</button>';
-        html += '</div>';
-        invModalOpen(html);
-        if(kind==='paid_channel') invSpgwToggleType();
-      }
-      function invSpgwToggleType(){
-        var sel = document.getElementById('invSpgwType');
-        if(!sel) return;
-        var isPing = sel.value === 'ping';
-        var isPaidAd = sel.value === 'paid_ad';
-        document.getElementById('invSpgwContentFields').style.display = isPing ? 'none' : '';
-        document.getElementById('invSpgwPrizeLbl').textContent = isPaidAd ? 'Server description (text or JSON)' : 'Prize';
-        var ta = document.getElementById('invSpgwPrize');
-        ta.rows = isPaidAd ? 6 : 2;
-        ta.style.fontFamily = isPaidAd ? 'ui-monospace,monospace' : 'inherit';
-        ta.placeholder = isPaidAd ? 'Write your ad as plain text, or paste exported JSON' : '500 robux';
-        document.getElementById('invSpgwPrizeHint').style.display = isPaidAd ? '' : 'none';
-      }
-      async function invSpgwSubmit(){
-        var id = invActiveId;
-        var typeSel = document.getElementById('invSpgwType');
-        var contentType = typeSel ? typeSel.value : null;
-        var isPing = contentType === 'ping';
-        var isPaidAdType = typeSel ? contentType === 'paid_ad' : invSpgwActiveKind === 'paid_ad';
-        var body = {
-          serverName: document.getElementById('invSpgwServer').value.trim(),
-          prize: isPing ? '' : document.getElementById('invSpgwPrize').value.trim(),
-          invite: isPing ? '' : document.getElementById('invSpgwInvite').value.trim(),
-          info: isPing ? '' : document.getElementById('invSpgwInfo').value.trim(),
-        };
-        if(contentType) body.channelContentType = contentType;
-        if(!body.serverName||(!isPing&&(!body.prize||!body.invite))){ dashToast('Server name, prize and invite are required.', false); return; }
-        if(isPaidAdType && !isPing && /^[{[]/.test(body.prize)){
-          try { JSON.parse(body.prize); }
-          catch(e){ dashToast('That starts with { or [ so it looks like JSON, but it didn\'t parse. Fix it, or remove the braces to submit as plain text.', false); return; }
-        }
-        var r = await fetch('/api/inventory/'+id+'/submit-spgw',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-        var d = await r.json().catch(function(){return {};});
-        if(r.ok&&d.ok){ invModalClose(); dashToast(d.message||'Submitted!'); setTimeout(function(){location.reload();},600); }
-        else dashToast(d.error||'Failed', false);
-      }
-
-      function invFileNameUpdate(inp, nameId){ document.getElementById(nameId).textContent = inp.files[0] ? inp.files[0].name : 'No file selected'; }
-      function invAdFormOpen(id, kind){
-        invActiveId = id;
-        var html = '';
-        if(kind==='banner_ad'){
-          html += '<div style="font-size:15px;font-weight:800;margin-bottom:14px">Banner Advertisement submission</div>';
-          html += '<label class="inv-modal-lbl">Text (max 100 characters)</label>';
-          html += '<input id="invAdText" class="inv-modal-in" maxlength="100" placeholder="e.g. Check out our server!">';
-          html += '<label class="inv-modal-lbl">Link (website or Discord server)</label>';
-          html += '<input id="invAdLink" class="inv-modal-in" placeholder="https://discord.gg/…">';
-        } else {
-          html += '<div style="font-size:15px;font-weight:800;margin-bottom:14px">Website Advertisement submission</div>';
-          html += '<label class="inv-modal-lbl">Server logo <span style="font-weight:500;text-transform:none;color:var(--muted)">(square image, like a Discord server icon)</span></label>';
-          html += '<label class="inv-file-wrap" for="invAdImage"><span class="inv-file-btn">Choose file</span><span class="inv-file-name" id="invAdImageName">No file selected</span></label>';
-          html += '<input id="invAdImage" type="file" accept="image/png,image/jpeg,image/gif,image/webp" class="inv-file-input" onchange="invFileNameUpdate(this,\'invAdImageName\')">';
-          html += '<label class="inv-modal-lbl">Text</label>';
-          html += '<input id="invAdText" class="inv-modal-in" maxlength="100" placeholder="A short line about your server">';
-          html += '<label class="inv-modal-lbl">Button text</label>';
-          html += '<input id="invAdButtonText" class="inv-modal-in" maxlength="30" placeholder="e.g. Join today">';
-          html += '<label class="inv-modal-lbl">Button link</label>';
-          html += '<input id="invAdButtonLink" class="inv-modal-in" placeholder="https://discord.gg/…">';
-        }
-        html += '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">';
-        html += '<button onclick="invModalClose()" style="padding:9px 16px;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Cancel</button>';
-        html += '<button onclick="invAdSubmit(\''+kind+'\')" style="padding:9px 18px;border-radius:9px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit">Submit</button>';
-        html += '</div>';
-        invModalOpen(html);
-      }
-      async function invAdSubmit(kind){
-        var id = invActiveId;
-        var fd = new FormData();
-        var text = document.getElementById('invAdText').value.trim();
-        if(!text){ dashToast('Text is required.', false); return; }
-        fd.append('text', text);
-        if(kind==='banner_ad'){
-          var link = document.getElementById('invAdLink').value.trim();
-          if(!link){ dashToast('A link is required.', false); return; }
-          fd.append('link', link);
-        } else {
-          var img = document.getElementById('invAdImage').files[0];
-          var buttonText = document.getElementById('invAdButtonText').value.trim();
-          var buttonLink = document.getElementById('invAdButtonLink').value.trim();
-          if(!img){ dashToast('A background image is required.', false); return; }
-          if(!buttonText||!buttonLink){ dashToast('Button text and link are required.', false); return; }
-          fd.append('image', img);
-          fd.append('buttonText', buttonText);
-          fd.append('buttonLink', buttonLink);
-        }
-        var r = await fetch('/api/inventory/'+id+'/submit-ad',{method:'POST',body:fd});
-        var d = await r.json().catch(function(){return {};});
-        if(r.ok&&d.ok){ invModalClose(); dashToast(d.message||'Submitted!'); setTimeout(function(){location.reload();},600); }
-        else dashToast(d.error||'Failed', false);
-      }
-
-      async function invUpgradeConfirm(id, kind){
-        var label = kind==='priority_queue' ? 'Priority Queue' : 'Instant Postage';
-        var ok = await dashConfirm({title:'Apply '+label+'?', body:'This will consume the item and apply it to your active sponsored giveaway entry.', confirm:'Apply'});
-        if(!ok) return;
-        var r = await fetch('/api/inventory/'+id+'/apply-upgrade',{method:'POST'});
-        var d = await r.json().catch(function(){return {};});
-        if(r.ok&&d.ok){ dashToast(d.message||'Applied!'); setTimeout(function(){location.reload();},600); }
-        else dashToast(d.error||'Failed', false);
-      }
-      </script>
-    </div>
+      .st-empty{background:var(--surface);border:1px dashed var(--border);border-radius:16px;padding:48px 28px;text-align:center}
+      .st-empty h3{font-size:16px;font-weight:800;margin-bottom:8px}
+      .st-empty p{font-size:13px;color:var(--muted2);line-height:1.6;max-width:46ch;margin:0 auto}
+    </style>
     
-    <% if (!roblox) { %>
-    <div class="rbx-gate">
-      <div class="rbx-gate-card">
-        <div class="rbx-gate-ic"><img src="https://judahcustoms.org/assets/Emojis/link.png" style="width:32px;height:32px;object-fit:contain" alt=""></div>
-        <div class="rbx-gate-title">Link your Roblox account first</div>
-        <div class="rbx-gate-sub">The dashboard needs a verified Roblox account before you can use it. It takes less than a minute.</div>
-        <a class="rbx-gate-btn" href="/verify">Please link a Roblox account first →</a>
-        <a class="rbx-gate-alt" href="/dashboard">View your account page instead</a>
+    <div class="st-wrap">
+      <div class="st-head">
+        <div class="st-stat"><div class="st-stat-v">0</div><div class="st-stat-l">Orders</div></div>
+        <div class="st-stat"><div class="st-stat-v">0</div><div class="st-stat-l">Files</div></div>
+      </div>
+      <div class="st-note">Every file here is the original the designer delivered — full quality, no watermark. Downloads are packaged as a zip. Your work stays available here permanently, even once the ticket is closed and deleted.</div>
+      <div class="st-empty">
+        <h3>Nothing stored yet</h3>
+        <p>Finished work from your orders shows up here automatically once Quality Control has approved it. Nothing of yours has reached that point yet.</p>
       </div>
     </div>
-    <% } %>
   </main>
   
   <style>
