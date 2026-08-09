@@ -319,7 +319,7 @@
     html.light .jc-glow { opacity: .05; }
     .jc-glow.g1 { background: radial-gradient(circle, var(--accent), transparent 65%); top: -20vw; right: -14vw; animation: jcDrift1 70s ease-in-out infinite alternate; }
     .jc-glow.g2 { background: radial-gradient(circle, #7c3aed, transparent 65%); bottom: -22vw; left: -16vw; animation: jcDrift2 90s ease-in-out infinite alternate; }
-    .jc-glow.g3 { background: radial-gradient(circle, #21D4FD, transparent 65%); top: 34vh; left: 26vw; width: 40vw; height: 40vw; opacity: .05; animation: jcDrift3 110s ease-in-out infinite alternate; }
+    .jc-glow.g3 { background: radial-gradient(circle, #0c76ff, transparent 65%); top: 34vh; left: 26vw; width: 40vw; height: 40vw; opacity: .05; animation: jcDrift3 110s ease-in-out infinite alternate; }
     html.light .jc-glow.g3 { opacity: .035; }
     @keyframes jcDrift1 { to { transform: translate(-13vw, 10vh) scale(1.14); } }
     @keyframes jcDrift2 { to { transform: translate(12vw, -11vh) scale(.9); } }
@@ -340,7 +340,7 @@
 
     #jcAurora {
       position: absolute; top: -14vh; left: -30%; width: 160%; height: 52vh;
-      background: linear-gradient(100deg, transparent 12%, rgba(0,117,255,.16) 38%, rgba(33,212,253,.12) 55%, transparent 82%);
+      background: linear-gradient(100deg, transparent 12%, rgba(0,117,255,.16) 38%, rgba(12,118,255,.12) 55%, transparent 82%);
       filter: blur(58px); opacity: .5; transform-origin: 50% 50%;
       animation: jcAurora 46s ease-in-out infinite alternate; opacity: .78;
     }
@@ -1488,49 +1488,6 @@
     })();
   </script>
 
-  <main class="dash-main">
-    <div class="dash-page-title">Storage</div>
-    <div class="dash-page-sub">Re-download the finished work from any order you have placed.</div>
-    <style>
-      .st-wrap{max-width:840px;margin:0 auto}
-      .st-head{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:20px}
-      .st-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;min-width:120px}
-      .st-stat-v{font-size:22px;font-weight:900;line-height:1}
-      .st-stat-l{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.05em}
-      .st-note{font-size:12.5px;color:var(--muted2);line-height:1.6;margin-bottom:20px;max-width:64ch}
-      .st-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:14px}
-      .st-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-      .st-svc{font-size:15px;font-weight:800}
-      .st-id{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
-      .st-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:12px;color:var(--muted2)}
-      .st-dl{
-        margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;
-        background:var(--accent);color:#fff;font-weight:800;font-size:13px;text-decoration:none;white-space:nowrap
-      }
-      .st-dl:hover{opacity:.9}
-      .st-files{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px}
-      .st-file{
-        font-size:11.5px;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);
-        border-radius:7px;padding:3px 9px;font-family:ui-monospace,monospace
-      }
-      .st-empty{background:var(--surface);border:1px dashed var(--border);border-radius:16px;padding:48px 28px;text-align:center}
-      .st-empty h3{font-size:16px;font-weight:800;margin-bottom:8px}
-      .st-empty p{font-size:13px;color:var(--muted2);line-height:1.6;max-width:46ch;margin:0 auto}
-    </style>
-    
-    <div class="st-wrap">
-      <div class="st-head">
-        <div class="st-stat"><div class="st-stat-v">0</div><div class="st-stat-l">Orders</div></div>
-        <div class="st-stat"><div class="st-stat-v">0</div><div class="st-stat-l">Files</div></div>
-      </div>
-      <div class="st-note">Every file here is the original the designer delivered — full quality, no watermark. Downloads are packaged as a zip. Your work stays available here permanently, even once the ticket is closed and deleted.</div>
-      <div class="st-empty">
-        <h3>Nothing stored yet</h3>
-        <p>Finished work from your orders shows up here automatically once Quality Control has approved it. Nothing of yours has reached that point yet.</p>
-      </div>
-    </div>
-  </main>
-  
   <style>
     #siteBanner { position: fixed; top: var(--topbar-h); left: var(--sidebar-w); right: 0; z-index: 49; transition: left .22s ease, right .22s ease; }
     html.layout-right #siteBanner { left: 0; right: var(--sidebar-w); }
